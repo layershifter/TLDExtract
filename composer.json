@@ -1,0 +1,20 @@
+{
+  "name": "layershifter/tldextract",
+  "description": "description_text",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexander Fedyashov",
+      "email": "a@fedyashov.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "LayerShifter\\TLDExtract\\": "src/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^6.1"
+  }
+}
