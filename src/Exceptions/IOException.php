@@ -2,7 +2,7 @@
 /**
  * IOException.php
  *
- * @author Alexander Fedyashov <af@e42.guru>
+ * @author Alexander Fedyashov <a@fedyashov.com>
  */
 
 namespace LayerShifter\TLDExtract\Exceptions;

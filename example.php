@@ -2,7 +2,7 @@
 /**
  * example.php
  *
- * @author Alexander Fedyashov <af@e42.guru>
+ * @author Alexander Fedyashov <a@fedyashov.com>
  */
 
 require 'vendor/autoload.php';

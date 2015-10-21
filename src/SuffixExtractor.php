@@ -2,7 +2,7 @@
 /**
  * TldExtractor.php
  *
- * @author Alexander Fedyashov <af@e42.guru>
+ * @author Alexander Fedyashov <a@fedyashov.com>
  */
 
 namespace LayerShifter\TLDExtract;
@@ -88,19 +88,19 @@ class SuffixExtractor
     private function fetchTldList()
     {
         $client = new Client();
+        $response = $client->get(Extract::getSuffixFileUrl(), ['verify' => false]);
 
-        try {
-            $response = $client->get(Extract::getSuffixFileUrl());
-        } catch (\Exception $e) {
+        $body = $response->getBody()->getContents();
+
+        if (empty($body)) {
             return false;
         }
 
-        $tlds = [];
-
-        if (!empty($page) && preg_match_all('@^(?P<tld>[.*!]*\w[\S]*)@um', $page, $matches)) {
-            $tlds = array_fill_keys($matches['tld'], true);
+        if (!preg_match_all('@^(?P<tld>[.*!]*\w[\S]*)@um', $body, $matches)) {
+            return false;
         }
-        return $tlds;
+
+        return array_fill_keys($matches['tld'], true);
     }
 
     /**
