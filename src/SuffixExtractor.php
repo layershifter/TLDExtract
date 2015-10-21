@@ -9,6 +9,8 @@ namespace LayerShifter\TLDExtract;
 
 
 use GuzzleHttp\Client;
+use LayerShifter\TLDExtract\Exceptions\IOException;
+use LayerShifter\TLDExtract\Exceptions\ListException;
 
 /**
  * Class SuffixExtractor
@@ -29,35 +31,53 @@ class SuffixExtractor
      */
     private $tldList = [];
 
+    /**
+     * SuffixExtractor constructor, runs actions for filling list of TLDs
+     *
+     * @throws IOException
+     * @throws ListException
+     */
     private function __construct()
     {
-        // Try load the public suffix list from the cache, if possible
+        /*
+         * If $fetch is TRUE of cache file not exists, try to fetch from remote URL
+         * */
+
+        if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
+            $tldList = $this->fetchTldList();
+
+            if (is_array($tldList) && count($tldList) > 0) {
+                $this->tldList = $tldList;
+
+                try {
+                    file_put_contents(
+                        Extract::getCacheFile(), json_encode($this->tldList)
+                    );
+
+                    return true;
+                } catch (\Exception $e) {
+                    throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
+                }
+            }
+        }
+
+        /*
+         * Try load the public suffix list from the cache, if possible
+         * */
 
         if (file_exists(Extract::getCacheFile())) {
-            $jsonData = file_get_contents(Extract::getCacheFile());
-            $this->tldList = json_decode($jsonData);
+            $tldList = json_decode(
+                file_get_contents(Extract::getCacheFile())
+            );
 
-            return true;
-        }
+            if (is_array($tldList) && count($tldList) > 0) {
+                $this->tldList = $tldList;
 
-        if (Extract::isFetch()) {
-            $tlds = $this->fetchTldList();
-        }
-
-        if (empty($tlds)) {
-            //If all else fails, try the local snapshot.
-            $snapshotFile = dirname(__FILE__) . DIRECTORY_SEPARATOR . '.tld_set_snapshot';
-            $serializedTlds = @file_get_contents($snapshotFile);
-            if (!empty($serializedTlds)) {
-                $this->extractor = new PublicSuffixExtractor(unserialize($serializedTlds));
-                return $this->extractor;
+                return true;
             }
-        } else {
-            //Update the cache.
-            @file_put_contents($this->cacheFile, serialize($tlds));
         }
-        $this->extractor = new PublicSuffixExtractor($tlds);
-        return $this->extractor;
+
+        throw new ListException('Cache file not exists & fetch from remote URL failed');
     }
 
     /**
@@ -81,24 +101,6 @@ class SuffixExtractor
             $tlds = array_fill_keys($matches['tld'], true);
         }
         return $tlds;
-    }
-
-    private function fetchPage($url)
-    {
-        if (ini_get('allow_url_fopen')) {
-            return @file_get_contents($url);
-        } else if (is_callable('curl_exec')) {
-            $handle = curl_init($url);
-            curl_setopt_array($handle, array(
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HEADER => false,
-                CURLOPT_FAILONERROR => true,
-            ));
-            $content = curl_exec($handle);
-            curl_close($handle);
-            return $content;
-        }
-        return '';
     }
 
     /**
