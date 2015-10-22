@@ -1,11 +1,17 @@
 <?php
+/**
+ * Extract.php
+ *
+ * @author Alexander Fedyashov <a@fedyashov.com>
+ * @author W-Shadow <whiteshadow@w-shadow.com>
+ */
 
 namespace LayerShifter\TLDExtract;
 
 /**
  * TLDExtract accurately extracts subdomain, domain and TLD components from URLs.
  *
- * @see TLDExtractResult for more information on the returned data structure.
+ * @see Result for more information on the returned data structure.
  */
 class Extract
 {
@@ -94,22 +100,31 @@ class Extract
         $host = self::getHost($url);
         $extractor = SuffixExtractor::getInstance();
 
-        list($registeredDomain, $tld) = $extractor->extract($host);
-        //Check for IPv4 and IPv6 addresses.
-        if (empty($tld) && $this->isIp($host)) {
-            return new Result('', $host, '');
-        }
-        $lastDot = strrpos($registeredDomain, '.');
-        if ($lastDot !== false) {
-            $subdomain = substr($registeredDomain, 0, $lastDot);
-            $domain = substr($registeredDomain, $lastDot + 1);
-        } else {
-            $subdomain = '';
-            $domain = $registeredDomain;
-        }
-        return new Result($subdomain, $domain, $tld);
-    }
+        list($domain, $tld) = $extractor->extract($host);
 
+        // Check for IPv4 and IPv6 addresses.
+
+        if (empty($tld) && Helpers::isIp($host)) {
+            return new Result($host);
+        }
+
+        $lastDot = strrpos($domain, '.');
+
+        // If $lastDot not FALSE, there is subdomain in domain
+
+        if ($lastDot !== false) {
+            return new Result(
+                substr($domain, 0, $lastDot),
+                substr($domain, $lastDot + 1),
+                $tld
+            );
+        }
+
+        return new Result(
+            $domain,
+            $tld
+        );
+    }
 
     /**
      * Extract the hostname from a URL.
@@ -150,35 +165,12 @@ class Extract
             return substr($host, 0, $closingBracketPosition + 1);
         }
 
-        // This is either a normal hostname or an IPv4 address
-        // Just remove the port.
+        /*
+         * This is either a normal hostname or an IPv4 address
+         * Just remove the port.
+         * */
 
         $parts = explode(':', $host);
         return reset($parts);
-    }
-
-    /**
-     * Check if the input is a valid IP address.
-     * Recognizes both IPv4 and IPv6 addresses.
-     *
-     * @param string $host
-     * @return bool
-     */
-    private function isIp($host)
-    {
-        //Strip the wrapping square brackets from IPv6 addresses
-        if ($this->startsWith($host, '[') && $this->endsWith($host, ']')) {
-            $host = substr($host, 1, -1);
-        }
-        return (bool)filter_var($host, FILTER_VALIDATE_IP);
-    }
-
-    private function endsWith($haystack, $needle)
-    {
-        $length = strlen($needle);
-        if ($length == 0) {
-            return true;
-        }
-        return (substr($haystack, -$length) === $needle);
     }
 }

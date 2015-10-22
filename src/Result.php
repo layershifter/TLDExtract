@@ -1,4 +1,10 @@
 <?php
+/**
+ * Result.php
+ *
+ * @author Alexander Fedyashov <a@fedyashov.com>
+ * @author W-Shadow <whiteshadow@w-shadow.com>
+ */
 
 namespace LayerShifter\TLDExtract;
 
@@ -22,7 +28,7 @@ class Result implements ArrayAccess
 {
     private $fields;
 
-    public function __construct($subdomain, $domain, $tld)
+    public function __construct(...$fields)
     {
         $this->fields = array(
             'subdomain' => $subdomain,
