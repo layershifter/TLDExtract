@@ -10,7 +10,7 @@ require 'vendor/autoload.php';
 
 use LayerShifter\TLDExtract\Extract;
 
-$result = Extract::extract('http://forums.news.cnn.com/');
+$result = Extract::get('http://forums.news.cnn.com/');
 
 var_dump($result->toJson());
 

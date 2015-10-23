@@ -1,5 +1,9 @@
 # TLDExtract
 
+[![Build Status](https://travis-ci.org/layershifter/TLDExtract.svg)](https://travis-ci.org/layershifter/TLDExtract)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
+
 `TLDExtract` accurately separates the gTLD or ccTLD (generic or country code
 top-level domain) from the registered domain and subdomains of a URL. For
 example, say you want just the 'google' part of 'http://www.google.com'.
@@ -17,7 +21,7 @@ looking up the currently living ones according to
 given a URL, it knows its subdomain from its domain, and its domain from its
 country code.
 
-    $result = Extract::extract('http://forums.news.cnn.com/');
+    $result = Extract::get('http://forums.news.cnn.com/');
     var_dump($result);
     
     object(LayerShifter\TLDExtract\Result)#34 (3) {

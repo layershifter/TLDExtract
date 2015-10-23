@@ -123,7 +123,7 @@ class Extract
      *
      * @return Result
      */
-    public static function extract($url)
+    public static function get($url)
     {
         $host = self::_getHost($url);
         $extractor = SuffixExtractor::getInstance();

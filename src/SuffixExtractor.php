@@ -120,8 +120,8 @@ class SuffixExtractor
      *
      * @param string $host Host for extraction
      *
-     * @return array An array with two items - the reg. domain (possibly with
-     *               subdomains) and the public suffix.
+     * @return string[] An array with two items - the reg. domain (possibly with
+     *                  subdomains) and the public suffix.
      */
     public function extract($host)
     {

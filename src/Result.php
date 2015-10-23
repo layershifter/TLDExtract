@@ -63,7 +63,7 @@ class Result implements ArrayAccess
     /**
      * Constructor of class
      *
-     * @param string $fields Array of fields that will be set
+     * @param string[] $fields Array of fields that will be set
      */
     public function __construct(...$fields)
     {
@@ -152,7 +152,7 @@ class Result implements ArrayAccess
             throw new OutOfRangeException(sprintf('Unknown field "%s"', $name));
         }
 
-        return $this->{'_'. $name};
+        return $this->{'_' . $name};
     }
 
     /**
