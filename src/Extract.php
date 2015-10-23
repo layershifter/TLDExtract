@@ -40,7 +40,7 @@ class Extract
      *
      * @var string
      */
-    private static $cacheFile = __DIR__ . '/../cache/.tld_set';
+    private static $cacheFile = '../cache/.tld_set';
 
     /**
      * Specifying $suffixFileUrl will override the URL from suffix list will be
@@ -133,7 +133,7 @@ class Extract
         // Check for IPv4 and IPv6 addresses.
 
         if (empty($tld) && Helpers::isIp($host)) {
-            return new Result($host);
+            return new Result(null, $host, null);
         }
 
         $lastDot = strrpos($domain, '.');
@@ -148,10 +148,7 @@ class Extract
             );
         }
 
-        return new Result(
-            $domain,
-            $tld
-        );
+        return new Result(null, $domain, $tld);
     }
 
     /**

@@ -56,29 +56,15 @@ class Result implements ArrayAccess
     /**
      * Constructor of class.
      *
-     * @param string[] $fields Array of fields that will be set
+     * @param $subdomain
+     * @param $domain
+     * @param $tld
      */
-    public function __construct(...$fields)
+    public function __construct($subdomain, $domain, $tld)
     {
-        switch (count($fields)) {
-            case 1:
-                $this->domain = $fields[0];
-                break;
-
-            case 2:
-                $this->domain = $fields[0];
-                $this->tld = $fields[1];
-                break;
-
-            case 3:
-                $this->subdomain = $fields[0];
-                $this->domain = $fields[1];
-                $this->tld = $fields[2];
-                break;
-
-            default:
-                throw new OutOfRangeException('Invalid number of arguments for Result::__construct');
-        }
+        $this->subdomain = $subdomain;
+        $this->domain = $domain;
+        $this->tld = $tld;
     }
 
     /**

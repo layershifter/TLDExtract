@@ -9,15 +9,17 @@ namespace Tests;
 
 use LayerShifter\TLDExtract\Result;
 
-class ResultTest extends \PHPUnit_Framework_TestCase {
+class ResultTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * @var Result
      */
     private $resultTest1;
 
-    public function setUp() {
-        $this->resultTest1 = new Result('IP');
+    public function setUp()
+    {
+        $this->resultTest1 = new Result(null, 'IP', null);
     }
 
     public function testConstruct()
@@ -26,7 +28,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('IP', $this->resultTest1->domain);
         $this->assertEquals(null, $this->resultTest1->tld);
 
-        $resultTest2 = new Result('DOMAIN', 'TLD');
+        $resultTest2 = new Result(null, 'DOMAIN', 'TLD');
 
         $this->assertEquals(null, $this->resultTest1->subdomain);
         $this->assertEquals('DOMAIN', $resultTest2->domain);
@@ -43,11 +45,12 @@ class ResultTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey('tld', $resultTest3);
     }
 
-    public function testToJson() {
+    public function testToJson()
+    {
         $this->assertJsonStringEqualsJsonString(
             $this->resultTest1->toJson(),
             json_encode((object)[
-               'subdomain' => null,
+                'subdomain' => null,
                 'domain' => 'IP',
                 'tld' => null
             ])

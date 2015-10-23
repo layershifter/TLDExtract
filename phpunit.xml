@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <phpunit
         addUncoveredFilesFromWhitelist="true"
         processUncoveredFilesFromWhitelist="true"
