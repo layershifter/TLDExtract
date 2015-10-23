@@ -1,6 +1,6 @@
 {
   "name": "layershifter/tldextract",
-  "description": "description_text",
+  "description": "TLDExtract package",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
@@ -9,12 +9,17 @@
       "email": "a@fedyashov.com"
     }
   ],
+  "require": {
+    "guzzlehttp/guzzle": "^6.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.0.*",
+    "squizlabs/php_codesniffer": "2.*",
+    "phpmd/phpmd": "@stable"
+  },
   "autoload": {
     "psr-4": {
       "LayerShifter\\TLDExtract\\": "src/"
     }
-  },
-  "require": {
-    "guzzlehttp/guzzle": "^6.1"
   }
 }
