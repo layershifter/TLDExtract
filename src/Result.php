@@ -148,7 +148,7 @@ class Result implements ArrayAccess
             throw new OutOfRangeException(sprintf('Unknown field "%s"', $name));
         }
 
-        return $this->{$name};
+        return $this->{'_'. $name};
     }
 
     /**
