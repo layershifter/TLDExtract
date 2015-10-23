@@ -1,13 +1,13 @@
 <?php
 /**
- * PHP version 5
- *
- * @category Classes
- * @package  LayerShifter/TLDExtract
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @author   W-Shadow <whiteshadow@w-shadow.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/layershifter/TLDExtract
+     * PHP version 5
+     *
+     * @category Classes
+     * @package  LayerShifter/TLDExtract
+     * @author   Alexander Fedyashov <a@fedyashov.com>
+     * @author   W-Shadow <whiteshadow@w-shadow.com>
+     * @license  MIT https://opensource.org/licenses/MIT
+     * @link     https://github.com/layershifter/TLDExtract
 */
 
 namespace LayerShifter\TLDExtract;
@@ -63,7 +63,7 @@ class Result implements ArrayAccess
     /**
      * Constructor of class
      *
-     * @param string[] $fields Array of fields that will be set
+     * @param string $fields Array of fields that will be set
      */
     public function __construct(...$fields)
     {

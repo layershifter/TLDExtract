@@ -1,13 +1,13 @@
 <?php
 /**
- * PHP version 5
- *
- * @category Classes
- * @package  LayerShifter/TLDExtract
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/layershifter/TLDExtract
- */
+     * PHP version 5
+     *
+     * @category Classes
+     * @package  LayerShifter/TLDExtract
+     * @author   Alexander Fedyashov <a@fedyashov.com>
+     * @license  MIT https://opensource.org/licenses/MIT
+     * @link     https://github.com/layershifter/TLDExtract
+     */
 
 namespace LayerShifter\TLDExtract;
 
