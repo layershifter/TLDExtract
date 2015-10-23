@@ -52,7 +52,7 @@ which is port of [Python module](https://github.com/john-kurkowski/tldextract).
 
 Latest release via Composer:
 
-    $ composer require LayerShifter/TLDExtract
+    $ composer require layershifter/tld-extract
 
 ## Note About Caching & Advanced Usage
 
