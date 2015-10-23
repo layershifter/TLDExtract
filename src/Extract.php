@@ -33,14 +33,14 @@ class Extract
      *
      * @var bool
      */
-    private static $_fetch = true;
+    private static $fetch = true;
     /**
      * Specifying $cacheFile will override the location of the cached TLD set.
      * Defaults to /path/to/tldextract/cache/.tld_set.
      *
      * @var string
      */
-    private static $_cacheFile = __DIR__ . '/../cache/.tld_set';
+    private static $cacheFile = __DIR__ . '/../cache/.tld_set';
 
     /**
      * Specifying $suffixFileUrl will override the URL from suffix list will be
@@ -48,7 +48,7 @@ class Extract
      *
      * @var string
      */
-    private static $_suffixFileUrl = 'https://publicsuffix.org/list/effective_tld_names.dat';
+    private static $suffixFileUrl = 'https://publicsuffix.org/list/effective_tld_names.dat';
 
     /**
      * Gets states of $_fetch.
@@ -57,19 +57,19 @@ class Extract
      */
     public static function isFetch()
     {
-        return self::$_fetch;
+        return self::$fetch;
     }
 
     /**
      * Sets $_fetch param.
      *
-     * @param boolean $_fetch @see $_fetch
+     * @param boolean $fetch @see $_fetch
      *
      * @return void
      */
-    public static function setFetch($_fetch)
+    public static function setFetch($fetch)
     {
-        self::$_fetch = $_fetch;
+        self::$fetch = $fetch;
     }
 
     /**
@@ -79,19 +79,19 @@ class Extract
      */
     public static function getCacheFile()
     {
-        return self::$_cacheFile;
+        return self::$cacheFile;
     }
 
     /**
      * Sets cache filename.
      *
-     * @param string $_cacheFile Filename where cache will be stored
+     * @param string $cacheFile Filename where cache will be stored
      *
      * @return void
      */
-    public static function setCacheFile($_cacheFile)
+    public static function setCacheFile($cacheFile)
     {
-        self::$_cacheFile = $_cacheFile;
+        self::$cacheFile = $cacheFile;
     }
 
     /**
@@ -101,19 +101,19 @@ class Extract
      */
     public static function getSuffixFileUrl()
     {
-        return self::$_suffixFileUrl;
+        return self::$suffixFileUrl;
     }
 
     /**
      * Sets URL of suffix list
      *
-     * @param string $_suffixFileUrl URL where stored valid suffix list
+     * @param string $suffixFileUrl URL where stored valid suffix list
      *
      * @return Extract
      */
-    public static function setSuffixFileUrl($_suffixFileUrl)
+    public static function setSuffixFileUrl($suffixFileUrl)
     {
-        self::$_suffixFileUrl = $_suffixFileUrl;
+        self::$suffixFileUrl = $suffixFileUrl;
     }
 
     /**
@@ -125,7 +125,7 @@ class Extract
      */
     public static function get($url)
     {
-        $host = self::_getHost($url);
+        $host = self::getHost($url);
         $extractor = SuffixExtractor::getInstance();
 
         list($domain, $tld) = $extractor->extract($host);
@@ -161,16 +161,13 @@ class Extract
      *
      * @return string
      */
-    private static function _getHost($url)
+    private static function getHost($url)
     {
         /*
          * Removes scheme and path
          * i.e. http://github.com to github.com
          * */
-        $parts = explode(
-            '/', preg_replace('#^([a-zA-Z][a-zA-Z0-9+\-.]*:)?//#', '', $url), 2
-        );
-
+        $parts = explode('/', preg_replace('#^([a-zA-Z][a-zA-Z0-9+\-.]*:)?//#', '', $url), 2);
         $host = reset($parts);
 
         /*

@@ -1,24 +1,23 @@
 <?php
 /**
-     * PHP version 5
-     *
-     * @category Classes
-     * @package  LayerShifter/TLDExtract
-     * @author   Alexander Fedyashov <a@fedyashov.com>
-     * @license  MIT https://opensource.org/licenses/MIT
-     * @link     https://github.com/layershifter/TLDExtract
-     */
+ * PHP version 5
+ *
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
+ */
 
 namespace LayerShifter\TLDExtract;
-
 
 use GuzzleHttp\Client;
 use LayerShifter\TLDExtract\Exceptions\IOException;
 use LayerShifter\TLDExtract\Exceptions\ListException;
 
 /**
- * This class splits domain names into the registered domain and public
- * suffix components using the TLD rule set from the Public Suffix List project.
+ * This class splits domain names into the registered domain and public suffix components using the TLD rule set from
+ * the Public Suffix List project.
  *
  * @category Classes
  * @package  LayerShifter/TLDExtract
@@ -32,13 +31,13 @@ class SuffixExtractor
      * Instance of class.
      * @var SuffixExtractor
      */
-    private static $_instance;
+    private static $instance;
 
     /**
      * The TLD set from Public Suffix List.
      * @var array
      */
-    private $_tldList = [];
+    private $tldList = [];
 
     /**
      * SuffixExtractor constructor, runs actions for filling list of TLDs.
@@ -51,22 +50,17 @@ class SuffixExtractor
         // If $fetch is TRUE of cache file not exists, try to fetch from remote URL
 
         if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
-            $tldList = $this->_fetchTldList();
+            $tldList = $this->fetchTldList();
 
             if (is_array($tldList) && count($tldList) > 0) {
-                $this->_tldList = $tldList;
+                $this->tldList = $tldList;
 
                 try {
-                    file_put_contents(
-                        Extract::getCacheFile(), json_encode($this->_tldList)
-                    );
+                    file_put_contents(Extract::getCacheFile(), json_encode($this->tldList));
 
                     return true;
                 } catch (\Exception $e) {
-                    throw new IOException(
-                        'Cannot put TLD list to cache', 0, null,
-                        Extract::getCacheFile()
-                    );
+                    throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
                 }
             }
         }
@@ -80,7 +74,7 @@ class SuffixExtractor
             );
 
             if (is_array($tldList) && count($tldList) > 0) {
-                $this->_tldList = $tldList;
+                $this->tldList = $tldList;
 
                 return true;
             }
@@ -96,7 +90,7 @@ class SuffixExtractor
      *
      * @return array|bool
      */
-    private function _fetchTldList()
+    private function fetchTldList()
     {
         $client = new Client();
         $response = $client->get(Extract::getSuffixFileUrl(), ['verify' => false]);
@@ -115,8 +109,7 @@ class SuffixExtractor
     }
 
     /**
-     * Extracts host & TLD from input string.
-     * Based on algorithm described in https://publicsuffix.org/list/
+     * Extracts host & TLD from input string. Based on algorithm described in https://publicsuffix.org/list/
      *
      * @param string $host Host for extraction
      *
@@ -131,7 +124,7 @@ class SuffixExtractor
             $maybeTld = implode('.', array_slice($parts, $i));
             $exceptionTld = '!' . $maybeTld;
 
-            if (isset($this->_tldList[$exceptionTld])) {
+            if (isset($this->tldList[$exceptionTld])) {
                 return [
                     implode('.', array_slice($parts, 0, $i + 1)),
                     implode('.', array_slice($parts, $i + 1)),
@@ -140,8 +133,8 @@ class SuffixExtractor
 
             $wildcardTld = '*.' . implode('.', array_slice($parts, $i + 1));
 
-            if (isset($this->_tldList[$wildcardTld])
-                || isset($this->_tldList[$maybeTld])
+            if (isset($this->tldList[$wildcardTld])
+                || isset($this->tldList[$maybeTld])
             ) {
                 return [
                     implode('.', array_slice($parts, 0, $i)),
@@ -170,10 +163,10 @@ class SuffixExtractor
      */
     public static function getInstance()
     {
-        if (self::$_instance === null) {
-            self::$_instance = new self();
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 }

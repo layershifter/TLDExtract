@@ -1,14 +1,14 @@
 <?php
 /**
-     * PHP version 5
-     *
-     * @category Classes
-     * @package  LayerShifter/TLDExtract
-     * @author   Alexander Fedyashov <a@fedyashov.com>
-     * @author   W-Shadow <whiteshadow@w-shadow.com>
-     * @license  MIT https://opensource.org/licenses/MIT
-     * @link     https://github.com/layershifter/TLDExtract
-*/
+ * PHP version 5
+ *
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @author   W-Shadow <whiteshadow@w-shadow.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
+ */
 
 namespace LayerShifter\TLDExtract;
 
@@ -16,13 +16,11 @@ use ArrayAccess;
 use LogicException;
 use OutOfRangeException;
 
-
 /**
  * This class holds the components of a domain name.
  *
- * You can access the components using either property syntax or array syntax.
- * For example, * "echo $result->tld" and "echo $result['tld']" will both work
- * and output the same string.
+ * You can access the components using either property syntax or array syntax. For example, "echo $result->tld" and
+ * "echo $result['tld']" will both work and output the same string.
  *
  * All properties are read-only.
  *
@@ -33,9 +31,6 @@ use OutOfRangeException;
  * @license  MIT https://opensource.org/licenses/MIT
  * @link     https://github.com/layershifter/TLDExtract
  *
- * @property $subdomain @see $_subdomain
- * @property $domain    @see $_domain
- * @property $tld       @see $_tld
  */
 class Result implements ArrayAccess
 {
@@ -44,54 +39,50 @@ class Result implements ArrayAccess
      *
      * @var string
      */
-    private $_subdomain = null;
+    private $subdomain = null;
     /**
-     * The registered domain. For example, in "a.b.google.com" the registered domain
-     * is "google".
+     * The registered domain. For example, in "a.b.google.com" the registered domain is "google".
      *
      * @var string
      */
-    private $_domain = null;
+    private $domain = null;
     /**
-     * The top-level domain / public suffix. For example: "com", "co.uk",
-     * "act.edu.au".
+     * The top-level domain / public suffix. For example: "com", "co.uk", "act.edu.au".
      *
      * @var string
      */
-    private $_tld = null;
+    private $tld = null;
 
     /**
-     * Constructor of class
+     * Constructor of class.
      *
-     * @param string $fields Array of fields that will be set
+     * @param string[] $fields Array of fields that will be set
      */
     public function __construct(...$fields)
     {
         switch (count($fields)) {
-        case 1:
-                $this->_domain = $fields[0];
-            break;
+            case 1:
+                $this->domain = $fields[0];
+                break;
 
-        case 2:
-                $this->_domain = $fields[0];
-                $this->_tld = $fields[1];
-            break;
+            case 2:
+                $this->domain = $fields[0];
+                $this->tld = $fields[1];
+                break;
 
-        case 3:
-                $this->_subdomain = $fields[0];
-                $this->_domain = $fields[1];
-                $this->_tld = $fields[2];
-            break;
+            case 3:
+                $this->subdomain = $fields[0];
+                $this->domain = $fields[1];
+                $this->tld = $fields[2];
+                break;
 
-        default:
-            throw new OutOfRangeException(
-                'Invalid number of arguments for Result::__construct'
-            );
+            default:
+                throw new OutOfRangeException('Invalid number of arguments for Result::__construct');
         }
     }
 
     /**
-     * Magic method for run isset on private params
+     * Magic method for run isset on private params.
      *
      * @param string $name Field name
      *
@@ -99,7 +90,7 @@ class Result implements ArrayAccess
      */
     public function __isset($name)
     {
-        return property_exists($this, '_' . $name);
+        return property_exists($this, $name);
     }
 
     /**
@@ -111,7 +102,10 @@ class Result implements ArrayAccess
     {
         return sprintf(
             "%s(subdomain='%s', domain='%s', tld='%s')",
-            __CLASS__, $this->_subdomain, $this->_domain, $this->_tld
+            __CLASS__,
+            $this->subdomain,
+            $this->domain,
+            $this->tld
         );
     }
 
@@ -148,41 +142,37 @@ class Result implements ArrayAccess
      */
     public function __get($name)
     {
-        if (!property_exists($this, '_' . $name)) {
+        if (!property_exists($this, $name)) {
             throw new OutOfRangeException(sprintf('Unknown field "%s"', $name));
         }
 
-        return $this->{'_' . $name};
+        return $this->{$name};
     }
 
     /**
      * Magic method, makes params read-only.
      *
-     * @param string $name  Name of params to retrieve
-     * @param mixed  $value Value to set
+     * @param string $name Name of params to retrieve
+     * @param mixed $value Value to set
      *
      * @return void
      */
     public function __set($name, $value)
     {
-        throw new LogicException('Can\'t modify an immutable object.');
+        throw new LogicException("Can't modify an immutable object.");
     }
 
     /**
      * Disables assigns a value to the specified offset.
      *
      * @param mixed $offset The offset to assign the value to
-     * @param mixed $value  Value to set
+     * @param mixed $value Value to set
      *
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        throw new LogicException(
-            sprintf(
-                "Can't modify an immutable object. You tried to set '%s'.", $offset
-            )
-        );
+        throw new LogicException(sprintf("Can't modify an immutable object. You tried to set '%s'.", $offset));
     }
 
     /**
@@ -194,25 +184,21 @@ class Result implements ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new LogicException(
-            sprintf(
-                "Can't modify an immutable object. You tried to unset '%s.'", $offset
-            )
-        );
+        throw new LogicException(sprintf("Can't modify an immutable object. You tried to unset '%s.'", $offset));
     }
 
     /**
-     * Get the domain name components as a native PHP array.
-     * The returned array will contain these keys: 'subdomain', 'domain' and 'tld'.
+     * Get the domain name components as a native PHP array. The returned array will contain these keys: 'subdomain',
+     * 'domain' and 'tld'.
      *
      * @return array
      */
     public function toArray()
     {
         return [
-            'subdomain' => $this->_subdomain,
-            'domain' => $this->_domain,
-            'tld' => $this->_tld
+            'subdomain' => $this->subdomain,
+            'domain' => $this->domain,
+            'tld' => $this->tld
         ];
     }
 

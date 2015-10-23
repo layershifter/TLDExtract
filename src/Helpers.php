@@ -1,16 +1,15 @@
 <?php
 /**
-     * PHP version 5
-     *
-     * @category Classes
-     * @package  LayerShifter/TLDExtract
-     * @author   Alexander Fedyashov <a@fedyashov.com>
-     * @license  MIT https://opensource.org/licenses/MIT
-     * @link     https://github.com/layershifter/TLDExtract
-     */
+ * PHP version 5
+ *
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
+ */
 
 namespace LayerShifter\TLDExtract;
-
 
 /**
  * Includes static functions (helpers) for package
@@ -54,8 +53,7 @@ class Helpers
     }
 
     /**
-     * Check if the input is a valid IP address.
-     * Recognizes both IPv4 and IPv6 addresses.
+     * Check if the input is a valid IP address. Recognizes both IPv4 and IPv6 addresses.
      *
      * @param string $host Host that will be checked
      *
