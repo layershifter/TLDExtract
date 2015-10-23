@@ -1,54 +1,64 @@
 <?php
 /**
- * Helpers.php
+ * PHP version 5
  *
- * @author Alexander Fedyashov <a@fedyashov.com>
- * @author Salman A <http://stackoverflow.com/users/87015/salman-a>
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
  */
 
 namespace LayerShifter\TLDExtract;
 
 
 /**
- * Class Helpers
- * @package LayerShifter\TLDExtract
- *
  * Includes static functions (helpers) for package
+ *
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
  */
 class Helpers
 {
 
     /**
-     * Implementation startsWith() from http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
+     * Implementation startsWith()
      *
-     * @param string $haystack
-     * @param string $needle
+     * @param string $haystack String where $needle will be searched
+     * @param string $needle   String that will be searched
      *
      * @return bool
      */
     public static function startsWith($haystack, $needle)
     {
-        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+        return $needle === ""
+            || strrpos($haystack, $needle, -strlen($haystack)) !== false;
     }
 
     /**
-     * Implementation endsWith() from http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
+     * Implementation endsWith() from @url
      *
-     * @param string $haystack
-     * @param string $needle
+     * @param string $haystack String where $needle will be searched
+     * @param string $needle   String that will be searched
      *
      * @return bool
      */
     public static function endsWith($haystack, $needle)
     {
-        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+        return $needle === "" || (
+            ($temp = strlen($haystack) - strlen($needle)) >= 0
+            && strpos($haystack, $needle, $temp) !== false);
     }
 
     /**
      * Check if the input is a valid IP address.
      * Recognizes both IPv4 and IPv6 addresses.
      *
-     * @param string $host
+     * @param string $host Host that will be checked
+     *
      * @return bool
      */
     public static function isIp($host)
