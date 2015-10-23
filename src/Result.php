@@ -32,6 +32,10 @@ use OutOfRangeException;
  * @author   W-Shadow <whiteshadow@w-shadow.com>
  * @license  MIT https://opensource.org/licenses/MIT
  * @link     https://github.com/layershifter/TLDExtract
+ *
+ * @property $subdomain @see $_subdomain
+ * @property $domain    @see $_domain
+ * @property $tld       @see $_tld
  */
 class Result implements ArrayAccess
 {
