@@ -1,9 +1,12 @@
 <?php
 /**
- * TldExtractor.php
+ * PHP version 5
  *
- * @author Alexander Fedyashov <a@fedyashov.com>
- * @author W-Shadow <whiteshadow@w-shadow.com>
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
  */
 
 namespace LayerShifter\TLDExtract;
@@ -14,23 +17,28 @@ use LayerShifter\TLDExtract\Exceptions\IOException;
 use LayerShifter\TLDExtract\Exceptions\ListException;
 
 /**
- * Class SuffixExtractor
- * @package LayerShifter\TLDExtract
+ * This class splits domain names into the registered domain and public
+ * suffix components using the TLD rule set from the Public Suffix List project.
  *
- * This class splits domain names into the registered domain and public suffix components
- * using the TLD rule set from the Public Suffix List project.
+ * @category Classes
+ * @package  LayerShifter/TLDExtract
+ * @author   Alexander Fedyashov <a@fedyashov.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/layershifter/TLDExtract
  */
 class SuffixExtractor
 {
     /**
-     * @var SuffixExtractor Instance of class.
+     * Instance of class.
+     * @var SuffixExtractor
      */
-    private static $instance;
+    private static $_instance;
 
     /**
-     * @var array The TLD set from Public Suffix List.
+     * The TLD set from Public Suffix List.
+     * @var array
      */
-    private $tldList = [];
+    private $_tldList = [];
 
     /**
      * SuffixExtractor constructor, runs actions for filling list of TLDs.
@@ -43,19 +51,22 @@ class SuffixExtractor
         // If $fetch is TRUE of cache file not exists, try to fetch from remote URL
 
         if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
-            $tldList = $this->fetchTldList();
+            $tldList = $this->_fetchTldList();
 
             if (is_array($tldList) && count($tldList) > 0) {
-                $this->tldList = $tldList;
+                $this->_tldList = $tldList;
 
                 try {
                     file_put_contents(
-                        Extract::getCacheFile(), json_encode($this->tldList)
+                        Extract::getCacheFile(), json_encode($this->_tldList)
                     );
 
                     return true;
                 } catch (\Exception $e) {
-                    throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
+                    throw new IOException(
+                        'Cannot put TLD list to cache', 0, null,
+                        Extract::getCacheFile()
+                    );
                 }
             }
         }
@@ -69,13 +80,15 @@ class SuffixExtractor
             );
 
             if (is_array($tldList) && count($tldList) > 0) {
-                $this->tldList = $tldList;
+                $this->_tldList = $tldList;
 
                 return true;
             }
         }
 
-        throw new ListException('Cache file not exists & fetch from remote URL failed');
+        throw new ListException(
+            'Cache file not exists & fetch from remote URL failed'
+        );
     }
 
     /**
@@ -83,7 +96,7 @@ class SuffixExtractor
      *
      * @return array|bool
      */
-    private function fetchTldList()
+    private function _fetchTldList()
     {
         $client = new Client();
         $response = $client->get(Extract::getSuffixFileUrl(), ['verify' => false]);
@@ -105,8 +118,10 @@ class SuffixExtractor
      * Extracts host & TLD from input string.
      * Based on algorithm described in https://publicsuffix.org/list/
      *
-     * @param string $host
-     * @return array An array with two items - the reg. domain (possibly with subdomains) and the public suffix.
+     * @param string $host Host for extraction
+     *
+     * @return array An array with two items - the reg. domain (possibly with
+     *               subdomains) and the public suffix.
      */
     public function extract($host)
     {
@@ -116,7 +131,7 @@ class SuffixExtractor
             $maybeTld = implode('.', array_slice($parts, $i));
             $exceptionTld = '!' . $maybeTld;
 
-            if (isset($this->tldList[$exceptionTld])) {
+            if (isset($this->_tldList[$exceptionTld])) {
                 return [
                     implode('.', array_slice($parts, 0, $i + 1)),
                     implode('.', array_slice($parts, $i + 1)),
@@ -125,7 +140,9 @@ class SuffixExtractor
 
             $wildcardTld = '*.' . implode('.', array_slice($parts, $i + 1));
 
-            if (isset($this->tldList[$wildcardTld]) || isset($this->tldList[$maybeTld])) {
+            if (isset($this->_tldList[$wildcardTld])
+                || isset($this->_tldList[$maybeTld])
+            ) {
                 return [
                     implode('.', array_slice($parts, 0, $i)),
                     $maybeTld
@@ -137,19 +154,26 @@ class SuffixExtractor
     }
 
 
+    /**
+     * Disables class cloning
+     *
+     * @return void
+     */
     private function __clone()
     {
     }
 
     /**
+     * Gets instance of current class
+     *
      * @return SuffixExtractor
      */
     public static function getInstance()
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if (self::$_instance === null) {
+            self::$_instance = new self();
         }
 
-        return self::$instance;
+        return self::$_instance;
     }
 }
