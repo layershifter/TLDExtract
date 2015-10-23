@@ -95,7 +95,7 @@ class Result implements ArrayAccess
      */
     public function __isset($name)
     {
-        return property_exists($this, $name);
+        return property_exists($this, '_' . $name);
     }
 
     /**
@@ -144,7 +144,7 @@ class Result implements ArrayAccess
      */
     public function __get($name)
     {
-        if (!property_exists($this, $name)) {
+        if (!property_exists($this, '_' . $name)) {
             throw new OutOfRangeException(sprintf('Unknown field "%s"', $name));
         }
 
