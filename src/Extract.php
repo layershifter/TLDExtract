@@ -15,12 +15,6 @@ namespace LayerShifter\TLDExtract;
 /**
  * TLDExtract accurately extracts subdomain, domain and TLD components from URLs.
  *
- * @category Classes
- * @package  LayerShifter/TLDExtract
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @author   W-Shadow <whiteshadow@w-shadow.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/layershifter/TLDExtract
  * @see      Result for more information on the returned data structure.
  */
 class Extract

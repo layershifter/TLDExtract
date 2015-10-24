@@ -18,12 +18,6 @@ use LayerShifter\TLDExtract\Exceptions\ListException;
 /**
  * This class splits domain names into the registered domain and public suffix components using the TLD rule set from
  * the Public Suffix List project.
- *
- * @category Classes
- * @package  LayerShifter/TLDExtract
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/layershifter/TLDExtract
  */
 class SuffixExtractor
 {
@@ -47,42 +41,7 @@ class SuffixExtractor
      */
     private function __construct()
     {
-        // If $fetch is TRUE of cache file not exists, try to fetch from remote URL
-
-        if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
-            $tldList = $this->fetchTldList();
-
-            if (is_array($tldList) && count($tldList) > 0) {
-                $this->tldList = $tldList;
-
-                try {
-                    file_put_contents(Extract::getCacheFile(), json_encode($this->tldList));
-
-                    return true;
-                } catch (\Exception $e) {
-                    throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
-                }
-            }
-        }
-
-        // Try load the public suffix list from the cache, if possible
-
-        if (file_exists(Extract::getCacheFile())) {
-            $tldList = json_decode(
-                file_get_contents(Extract::getCacheFile()),
-                true
-            );
-
-            if (is_array($tldList) && count($tldList) > 0) {
-                $this->tldList = $tldList;
-
-                return true;
-            }
-        }
-
-        throw new ListException(
-            'Cache file not exists & fetch from remote URL failed'
-        );
+        $this->loadTldList();
     }
 
     /**
@@ -168,5 +127,52 @@ class SuffixExtractor
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Method that load TLD list from cache or URL to object's property
+     *
+     * @return bool
+     * @throws IOException
+     * @throws ListException
+     */
+    private function loadTldList()
+    {
+        // If $fetch is TRUE of cache file not exists, try to fetch from remote URL
+
+        if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
+            $tldList = $this->fetchTldList();
+
+            if (is_array($tldList) && count($tldList) > 0) {
+                $this->tldList = $tldList;
+
+                try {
+                    file_put_contents(Extract::getCacheFile(), json_encode($this->tldList));
+
+                    return true;
+                } catch (\Exception $e) {
+                    throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
+                }
+            }
+        }
+
+        // Try load the public suffix list from the cache, if possible
+
+        if (file_exists(Extract::getCacheFile())) {
+            $tldList = json_decode(
+                file_get_contents(Extract::getCacheFile()),
+                true
+            );
+
+            if (is_array($tldList) && count($tldList) > 0) {
+                $this->tldList = $tldList;
+
+                return true;
+            }
+        }
+
+        throw new ListException(
+            'Cache file not exists & fetch from remote URL failed'
+        );
     }
 }

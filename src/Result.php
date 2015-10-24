@@ -24,13 +24,9 @@ use OutOfRangeException;
  *
  * All properties are read-only.
  *
- * @category Classes
- * @package  LayerShifter/TLDExtract
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @author   W-Shadow <whiteshadow@w-shadow.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/layershifter/TLDExtract
- *
+ * @property-read $subdomain
+ * @property-read $domain
+ * @property-read $tld
  */
 class Result implements ArrayAccess
 {

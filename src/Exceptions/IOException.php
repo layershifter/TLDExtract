@@ -13,12 +13,6 @@ namespace LayerShifter\TLDExtract\Exceptions;
 
 /**
  * Exception for filesystem errors
- *
- * @category Exceptions
- * @package  LayerShifter/TLDExtract/Exceptions
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/layershifter/TLDExtract
  */
 class IOException extends \Exception
 {
