@@ -52,6 +52,11 @@ Also you can simply convert result to JSON.
 This package based on code from [w-shadow](http://w-shadow.com/blog/2012/08/28/tldextract/)
 which is port of [Python module](https://github.com/john-kurkowski/tldextract).
 
+## Compatible PHP versions
+- PHP 5.5
+- PHP 5.6
+- HHVM
+
 ## Installation
 
 Latest release via Composer:
