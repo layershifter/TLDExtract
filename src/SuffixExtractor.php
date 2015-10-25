@@ -47,7 +47,9 @@ class SuffixExtractor
     /**
      * Fetches TLD list from remote URL and parses it to array.
      *
-     * @return array|bool
+     * @throws IOException
+     *
+     * @return bool
      */
     private function fetchTldList()
     {
@@ -64,7 +66,17 @@ class SuffixExtractor
             return false;
         }
 
-        return array_fill_keys($matches['tld'], true);
+        if (count($matches['tld']) == 0) {
+            return false;
+        }
+
+        $this->tldList = array_fill_keys($matches['tld'], true);
+
+        if (@file_put_contents(Extract::getCacheFile(), json_encode($this->tldList))) {
+            return true;
+        }
+
+        throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
     }
 
     /**
@@ -72,8 +84,7 @@ class SuffixExtractor
      *
      * @param string $host Host for extraction
      *
-     * @return string[] An array with two items - the reg. domain (possibly with
-     *                  subdomains) and the public suffix.
+     * @return string[] An array with two items - the reg. domain (possibly with subdomains) and the public suffix.
      */
     public function extract($host)
     {
@@ -132,27 +143,18 @@ class SuffixExtractor
     /**
      * Method that load TLD list from cache or URL to object's property
      *
-     * @return bool
      * @throws IOException
      * @throws ListException
+     *
+     * @return bool
      */
     private function loadTldList()
     {
         // If $fetch is TRUE of cache file not exists, try to fetch from remote URL
 
         if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
-            $tldList = $this->fetchTldList();
-
-            if (is_array($tldList) && count($tldList) > 0) {
-                $this->tldList = $tldList;
-
-                try {
-                    file_put_contents(Extract::getCacheFile(), json_encode($this->tldList));
-
-                    return true;
-                } catch (\Exception $e) {
-                    throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
-                }
+            if ($this->fetchTldList()) {
+                return true;
             }
         }
 

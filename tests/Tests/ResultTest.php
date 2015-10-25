@@ -25,7 +25,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     private $entity;
 
-
     /**
      * Method that setups test's environment
      * @return void
@@ -115,7 +114,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testSet()
     {
         $this->setExpectedException('LogicException');
-        $this->entity->domain = 'DOMAIN1';
+        $this->entity->domain = 'another-domain';
     }
 
     /**
@@ -139,7 +138,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSet()
     {
         $this->setExpectedException('LogicException');
-        $this->entity['domain'] = 'DOMAIN1';
+        $this->entity['domain'] = 'another-domain';
     }
 
     /**
