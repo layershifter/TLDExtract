@@ -25,11 +25,11 @@ country code.
     var_dump($result);
     
     object(LayerShifter\TLDExtract\Result)#34 (3) {
-      ["_subdomain":"LayerShifter\TLDExtract\Result":private]=>
+      ["subdomain":"LayerShifter\TLDExtract\Result":private]=>
       string(11) "forums.news"
-      ["_domain":"LayerShifter\TLDExtract\Result":private]=>
+      ["domain":"LayerShifter\TLDExtract\Result":private]=>
       string(3) "cnn"
-      ["_tld":"LayerShifter\TLDExtract\Result":private]=>
+      ["tld":"LayerShifter\TLDExtract\Result":private]=>
       string(3) "com"
     }
 
