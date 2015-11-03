@@ -113,7 +113,7 @@ class SuffixExtractor
             }
         }
 
-        return [$host, ''];
+        return [$host, null];
     }
 
 
