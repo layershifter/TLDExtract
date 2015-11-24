@@ -65,6 +65,25 @@ Latest release via Composer:
 
 ## Note About Caching & Advanced Usage
 
+By default `TLDExtract` downloads TLD list from publicsuffix.org, caches it and never update.
+
+You can override this behavior via setting $fetch to `true`:
+
+    Extract::setFetch(true);
+
+---
+
+Also, you can manually update TLD cache by calling method (recommended):
+
+    Extract::updateCache();
+    
+This method returns boolean that indicates processes result.
+
+---
+
+By default cache file will be stored in `/path/to/TLDExtract/cache/.tld_set`, you can set file for cache by calling:
+
+    Extract::setCacheFile('/path/to/your/dir/cache.file');
 
 License
 -------
