@@ -51,7 +51,7 @@ class SuffixExtractor
      *
      * @return bool
      */
-    private function fetchTldList()
+    public function fetchTldList()
     {
         $client = new Client();
         $response = $client->get(Extract::getSuffixFileUrl(), ['verify' => false]);
@@ -76,7 +76,10 @@ class SuffixExtractor
             return true;
         }
 
-        throw new IOException('Cannot put TLD list to cache', 0, null, Extract::getCacheFile());
+        throw new IOException(sprintf(
+            'Cannot put TLD list to cache file, check writes rights on directory of file',
+            Extract::getCacheFile()
+        ), 0, null, Extract::getCacheFile());
     }
 
     /**
@@ -116,7 +119,6 @@ class SuffixExtractor
         return [$host, null];
     }
 
-
     /**
      * Disables class cloning
      *
@@ -146,7 +148,7 @@ class SuffixExtractor
      * @throws IOException
      * @throws ListException
      *
-     * @return bool
+     * @return true
      */
     private function loadTldList()
     {
@@ -160,21 +162,37 @@ class SuffixExtractor
 
         // Try load the public suffix list from the cache, if possible
 
-        if (file_exists(Extract::getCacheFile())) {
-            $tldList = json_decode(
-                file_get_contents(Extract::getCacheFile()),
-                true
-            );
-
-            if (is_array($tldList) && count($tldList) > 0) {
-                $this->tldList = $tldList;
-
-                return true;
-            }
+        if ($this->loadFromCache()) {
+            return true;
         }
 
         throw new ListException(
             'Cache file not exists & fetch from remote URL failed'
         );
+    }
+
+    /**
+     * Tries load file with TLDs from cache
+     *
+     * @return bool
+     */
+    private function loadFromCache()
+    {
+        if (!file_exists(Extract::getCacheFile())) {
+            return false;
+        }
+
+        $tldList = json_decode(
+            file_get_contents(Extract::getCacheFile()),
+            true
+        );
+
+        if (is_array($tldList) && count($tldList) > 0) {
+            $this->tldList = $tldList;
+
+            return true;
+        }
+
+        return false;
     }
 }
