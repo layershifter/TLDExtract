@@ -21,20 +21,21 @@ class Extract
 {
 
     /**
-     * If $fetch is TRUE (the default) and no cached TLD set is found, the
-     * extractor will fetch the Public Suffix List live over HTTP on first use.
+     * If $fetch is TRUE and no cached TLD set is found, the extractor will fetch the Public Suffix List live over
+     * HTTP on first use.
+     *
      * Set to FALSE to disable this behaviour.
      *
      * @var bool
      */
-    private static $fetch = true;
+    private static $fetch = false;
     /**
      * Specifying $cacheFile will override the location of the cached TLD set.
-     * Defaults to /path/to/tldextract/cache/.tld_set.
+     * Defaults to /path/to/TLDExtract/cache/.tld_set.
      *
      * @var string
      */
-    private static $cacheFile = '../cache/.tld_set';
+    private static $cacheFile = null;
 
     /**
      * Specifying $suffixFileUrl will override the URL from suffix list will be
@@ -45,7 +46,7 @@ class Extract
     private static $suffixFileUrl = 'https://publicsuffix.org/list/effective_tld_names.dat';
 
     /**
-     * Gets states of $_fetch.
+     * Gets states of $fetch.
      *
      * @return boolean
      */
@@ -55,9 +56,9 @@ class Extract
     }
 
     /**
-     * Sets $_fetch param.
+     * Sets $fetch param.
      *
-     * @param boolean $fetch @see $_fetch
+     * @param boolean $fetch
      *
      * @return void
      */
@@ -119,6 +120,10 @@ class Extract
      */
     public static function get($url)
     {
+        if (self::$cacheFile === null) {
+            self::$cacheFile = __DIR__ . '/cache/.tld_set';
+        }
+
         $host = self::getHost($url);
         $extractor = SuffixExtractor::getInstance();
 
@@ -143,6 +148,20 @@ class Extract
         }
 
         return new Result(null, $domain, $tld);
+    }
+
+    /**
+     * Method for manually updating of TLD list's cache
+     *
+     * @return bool
+     *
+     * @throws Exceptions\IOException
+     */
+    public static function updateCache()
+    {
+        $extractor = SuffixExtractor::getInstance();
+
+        return $extractor->fetchTldList();
     }
 
     /**
@@ -175,12 +194,12 @@ class Extract
          *
          * @see http://www.ietf.org/rfc/rfc2732.txt
          * */
-        $closingBracketPosition = strrpos($host, ']');
+        $bracketPosition = strrpos($host, ']');
 
-        if (Helpers::startsWith($host, '[') && $closingBracketPosition !== false) {
+        if (Helpers::startsWith($host, '[') && $bracketPosition !== false) {
             // This is IPv6 literal
 
-            return substr($host, 0, $closingBracketPosition + 1);
+            return substr($host, 0, $bracketPosition + 1);
         }
 
         /*
