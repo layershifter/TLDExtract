@@ -5,7 +5,6 @@
  * @author Alexander Fedyashov <a@fedyashov.com>
  */
 
-
 require 'vendor/autoload.php';
 
 use LayerShifter\TLDExtract\Extract;

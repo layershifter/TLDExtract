@@ -21,12 +21,14 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Object for tests
+     *
      * @var Result
      */
     private $entity;
 
     /**
      * Method that setups test's environment
+     *
      * @return void
      */
     public function setUp()
@@ -36,40 +38,42 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test for __constructor
+     *
      * @return void
      */
     public function testConstruct()
     {
-        $this->assertEquals(null, $this->entity->subdomain);
-        $this->assertEquals('192.168.0.1', $this->entity->domain);
-        $this->assertEquals(null, $this->entity->tld);
+        self::assertNull($this->entity->subdomain);
+        self::assertEquals('192.168.0.1', $this->entity->domain);
+        self::assertNull($this->entity->tld);
 
         $entity = new Result(null, 'domain', 'com');
 
-        $this->assertEquals(null, $this->entity->subdomain);
-        $this->assertEquals('domain', $entity->domain);
-        $this->assertEquals('com', $entity->tld);
+        self::assertNull($this->entity->subdomain);
+        self::assertEquals('domain', $entity->domain);
+        self::assertEquals('com', $entity->tld);
 
         unset($entity);
 
         $entity = new Result('www', 'domain', 'com');
 
-        $this->assertEquals('www', $entity->subdomain);
-        $this->assertEquals('domain', $entity->domain);
-        $this->assertEquals('com', $entity->tld);
+        self::assertEquals('www', $entity->subdomain);
+        self::assertEquals('domain', $entity->domain);
+        self::assertEquals('com', $entity->tld);
 
-        $this->assertArrayHasKey('subdomain', $entity);
-        $this->assertArrayHasKey('domain', $entity);
-        $this->assertArrayHasKey('tld', $entity);
+        self::assertArrayHasKey('subdomain', $entity);
+        self::assertArrayHasKey('domain', $entity);
+        self::assertArrayHasKey('tld', $entity);
     }
 
     /**
      * Test for toJson()
+     *
      * @return void
      */
     public function testToJson()
     {
-        $this->assertJsonStringEqualsJsonString(
+        self::assertJsonStringEqualsJsonString(
             json_encode((object)[
                 'subdomain' => null,
                 'domain' => '192.168.0.1',
@@ -81,49 +85,51 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test for magic method __toString()
+     *
      * @return void
      */
     public function testToString()
     {
-        $this->assertEquals(
-            "LayerShifter\TLDExtract\Result(subdomain='', domain='192.168.0.1', tld='')",
-            (string)$this->entity
-        );
+        self::assertEquals('192.168.0.1', (string)$this->entity);
     }
 
     /**
      * Test for magic method __isset()
+     *
      * @return void
      */
     public function testIsset()
     {
-        $this->assertEquals(true, isset($this->entity->subdomain));
-        $this->assertEquals(true, isset($this->entity->domain));
-        $this->assertEquals(true, isset($this->entity->tld));
+        self::assertEquals(true, $this->entity->subdomain === null);
+        self::assertEquals(true, $this->entity->domain !== null);
+        self::assertEquals(true, $this->entity->tld === null);
 
         /** @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
          */
-        $this->assertEquals(false, isset($this->entity->test));
+        self::assertEquals(false, isset($this->entity->test));
     }
 
     /**
      * Test for magic method __set()
+     *
      * @return void
      */
     public function testSet()
     {
-        $this->setExpectedException('LogicException');
-        $this->entity->domain = 'another-domain';
+        self::setExpectedException('LogicException');
+
+        $this->entity->offsetSet('domain', 'another-domain');
     }
 
     /**
      * Test for magic method __get()
+     *
      * @return void
      */
     public function testGet()
     {
-        $this->setExpectedException('OutOfRangeException');
+        self::setExpectedException('OutOfRangeException');
 
         /** @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
@@ -133,30 +139,35 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test for magic method __offsetSet()
+     *
      * @return void
      */
     public function testOffsetSet()
     {
-        $this->setExpectedException('LogicException');
+        self::setExpectedException('LogicException');
+
         $this->entity['domain'] = 'another-domain';
     }
 
     /**
      * Test for magic method __offsetGet()
+     *
      * @return void
      */
     public function testOffsetGet()
     {
-        $this->assertEquals('192.168.0.1', $this->entity['domain']);
+        self::assertEquals('192.168.0.1', $this->entity['domain']);
     }
 
     /**
      * Test for magic method __offsetUnset()
+     *
      * @return void
      */
     public function testOffsetUnset()
     {
-        $this->setExpectedException('LogicException');
+        self::setExpectedException('LogicException');
+
         unset($this->entity['domain']);
     }
 }

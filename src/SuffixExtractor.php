@@ -23,12 +23,14 @@ class SuffixExtractor
 {
     /**
      * Instance of class.
+     *
      * @var SuffixExtractor
      */
     private static $instance;
 
     /**
      * The TLD set from Public Suffix List.
+     *
      * @var array
      */
     private $tldList = [];
@@ -38,8 +40,9 @@ class SuffixExtractor
      *
      * @throws IOException
      * @throws ListException
+     * @throws \RuntimeException
      */
-    private function __construct()
+    protected function __construct()
     {
         $this->loadTldList();
     }
@@ -48,8 +51,9 @@ class SuffixExtractor
      * Fetches TLD list from remote URL and parses it to array.
      *
      * @throws IOException
+     * @throws \RuntimeException
      *
-     * @return bool
+     * @return boolean
      */
     public function fetchTldList()
     {
@@ -58,7 +62,7 @@ class SuffixExtractor
 
         $body = $response->getBody()->getContents();
 
-        if (empty($body)) {
+        if ($body === '') {
             return false;
         }
 
@@ -66,7 +70,7 @@ class SuffixExtractor
             return false;
         }
 
-        if (count($matches['tld']) == 0) {
+        if (count($matches['tld']) === 0) {
             return false;
         }
 
@@ -77,7 +81,7 @@ class SuffixExtractor
         }
 
         throw new IOException(sprintf(
-            'Cannot put TLD list to cache file, check writes rights on directory of file',
+            'Cannot put TLD list to cache file %s, check writes rights on directory of file',
             Extract::getCacheFile()
         ), 0, null, Extract::getCacheFile());
     }
@@ -97,7 +101,7 @@ class SuffixExtractor
             $maybeTld = implode('.', array_slice($parts, $i));
             $exceptionTld = '!' . $maybeTld;
 
-            if (isset($this->tldList[$exceptionTld])) {
+            if (array_key_exists($exceptionTld, $this->tldList)) {
                 return [
                     implode('.', array_slice($parts, 0, $i + 1)),
                     implode('.', array_slice($parts, $i + 1)),
@@ -106,9 +110,7 @@ class SuffixExtractor
 
             $wildcardTld = '*.' . implode('.', array_slice($parts, $i + 1));
 
-            if (isset($this->tldList[$wildcardTld])
-                || isset($this->tldList[$maybeTld])
-            ) {
+            if (array_key_exists($wildcardTld, $this->tldList) || array_key_exists($maybeTld, $this->tldList)) {
                 return [
                     implode('.', array_slice($parts, 0, $i)),
                     $maybeTld
@@ -131,6 +133,10 @@ class SuffixExtractor
     /**
      * Gets instance of current class
      *
+     * @throws IOException
+     * @throws ListException
+     * @throws \RuntimeException
+     *
      * @return SuffixExtractor
      */
     public static function getInstance()
@@ -147,17 +153,18 @@ class SuffixExtractor
      *
      * @throws IOException
      * @throws ListException
+     * @throws \RuntimeException
      *
-     * @return true
+     * @return boolean
      */
     private function loadTldList()
     {
         // If $fetch is TRUE of cache file not exists, try to fetch from remote URL
 
-        if (Extract::isFetch() || !file_exists(Extract::getCacheFile())) {
-            if ($this->fetchTldList()) {
-                return true;
-            }
+        $needFetch = Extract::isFetch() || !file_exists(Extract::getCacheFile());
+
+        if ($needFetch && $this->fetchTldList()) {
+            return true;
         }
 
         // Try load the public suffix list from the cache, if possible
@@ -174,7 +181,7 @@ class SuffixExtractor
     /**
      * Tries load file with TLDs from cache
      *
-     * @return bool
+     * @return boolean
      */
     private function loadFromCache()
     {

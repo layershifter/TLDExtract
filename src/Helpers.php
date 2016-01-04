@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Classes
  * @package  LayerShifter/TLDExtract
@@ -23,11 +23,11 @@ class Helpers
      * @param string $haystack String where $needle will be searched
      * @param string $needle   String that will be searched
      *
-     * @return bool
+     * @return boolean
      */
     public static function startsWith($haystack, $needle)
     {
-        return $needle === ""
+        return $needle === ''
             || strrpos($haystack, $needle, -strlen($haystack)) !== false;
     }
 
@@ -37,11 +37,11 @@ class Helpers
      * @param string $haystack String where $needle will be searched
      * @param string $needle   String that will be searched
      *
-     * @return bool
+     * @return boolean
      */
     public static function endsWith($haystack, $needle)
     {
-        return $needle === "" || (
+        return $needle === '' || (
             ($temp = strlen($haystack) - strlen($needle)) >= 0
             && strpos($haystack, $needle, $temp) !== false);
     }
@@ -51,7 +51,7 @@ class Helpers
      *
      * @param string $host Host that will be checked
      *
-     * @return bool
+     * @return boolean
      */
     public static function isIp($host)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Exceptions
  * @package  LayerShifter/TLDExtract/Exceptions

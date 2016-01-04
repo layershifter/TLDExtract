@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Classes
  * @package  LayerShifter/TLDExtract
@@ -12,10 +12,13 @@
 
 namespace LayerShifter\TLDExtract;
 
+use LayerShifter\TLDExtract\Exceptions\IOException;
+use LayerShifter\TLDExtract\Exceptions\ListException;
+
 /**
  * TLDExtract accurately extracts subdomain, domain and TLD components from URLs.
  *
- * @see      Result for more information on the returned data structure.
+ * @see Result for more information on the returned data structure.
  */
 class Extract
 {
@@ -26,7 +29,7 @@ class Extract
      *
      * Set to FALSE to disable this behaviour.
      *
-     * @var bool
+     * @var boolean
      */
     private static $fetch = false;
     /**
@@ -35,15 +38,33 @@ class Extract
      *
      * @var string
      */
-    private static $cacheFile = null;
+    private static $cacheFile;
 
     /**
-     * Specifying $suffixFileUrl will override the URL from suffix list will be
-     * loaded.
+     * Specifying $suffixFileUrl will override the URL from suffix list will be loaded.
      *
      * @var string
      */
     private static $suffixFileUrl = 'https://publicsuffix.org/list/effective_tld_names.dat';
+
+    /**
+     * Specifying $resultClass will override object of result's class.
+     *
+     * @var string
+     */
+    private static $resultClass = '\LayerShifter\TLDExtract\Interfaces\ResultInterface';
+
+    /**
+     * Sets $resultClass param.
+     *
+     * @param string $resultClass
+     *
+     * @return void
+     */
+    public static function setResultClass($resultClass)
+    {
+        self::$resultClass = $resultClass;
+    }
 
     /**
      * Gets states of $fetch.
@@ -116,6 +137,10 @@ class Extract
      *
      * @param string $url URL that will be extracted
      *
+     * @throws IOException
+     * @throws ListException
+     * @throws \RuntimeException
+     *
      * @return Result
      */
     public static function get($url)
@@ -131,7 +156,7 @@ class Extract
 
         // Check for IPv4 and IPv6 addresses.
 
-        if (empty($tld) && Helpers::isIp($host)) {
+        if ($tld === null && Helpers::isIp($host)) {
             return new Result(null, $host, null);
         }
 
@@ -153,9 +178,11 @@ class Extract
     /**
      * Method for manually updating of TLD list's cache
      *
-     * @return bool
+     * @throws IOException
+     * @throws ListException
+     * @throws \RuntimeException
      *
-     * @throws Exceptions\IOException
+     * @return boolean
      */
     public static function updateCache()
     {
@@ -196,7 +223,7 @@ class Extract
          * */
         $bracketPosition = strrpos($host, ']');
 
-        if (Helpers::startsWith($host, '[') && $bracketPosition !== false) {
+        if ($bracketPosition !== false && Helpers::startsWith($host, '[')) {
             // This is IPv6 literal
 
             return substr($host, 0, $bracketPosition + 1);
@@ -208,6 +235,7 @@ class Extract
          * */
 
         $parts = explode(':', $host);
+
         return reset($parts);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Exceptions
  * @package  LayerShifter/TLDExtract/Exceptions
@@ -22,7 +22,7 @@ class IOException extends \Exception
      * Constructor of exception.
      *
      * @param string     $message  Message for exception
-     * @param int        $code     Error code
+     * @param integer    $code     Error code
      * @param \Exception $previous Parent exception
      * @param null       $filename Filename
      */

@@ -12,9 +12,7 @@
 
 namespace LayerShifter\TLDExtract;
 
-use ArrayAccess;
-use LogicException;
-use OutOfRangeException;
+use LayerShifter\TLDExtract\Interfaces\ResultInterface;
 
 /**
  * This class holds the components of a domain name.
@@ -28,26 +26,26 @@ use OutOfRangeException;
  * @property-read $domain
  * @property-read $tld
  */
-class Result implements ArrayAccess
+class Result implements \ArrayAccess, ResultInterface
 {
     /**
      * The subdomain. For example, the subdomain of "a.b.google.com" is "a.b".
      *
      * @var string
      */
-    private $subdomain = null;
+    private $subdomain;
     /**
      * The registered domain. For example, in "a.b.google.com" the registered domain is "google".
      *
      * @var string
      */
-    private $domain = null;
+    private $domain;
     /**
      * The top-level domain / public suffix. For example: "com", "co.uk", "act.edu.au".
      *
      * @var string
      */
-    private $tld = null;
+    private $tld;
 
     /**
      * Constructor of class.
@@ -68,7 +66,7 @@ class Result implements ArrayAccess
      *
      * @param string $name Field name
      *
-     * @return bool
+     * @return boolean
      */
     public function __isset($name)
     {
@@ -82,13 +80,40 @@ class Result implements ArrayAccess
      */
     public function __toString()
     {
-        return sprintf(
-            "%s(subdomain='%s', domain='%s', tld='%s')",
-            __CLASS__,
+        return $this->getHost();
+    }
+
+    /**
+     * Method that returns full host record
+     *
+     * @return string
+     *
+     * @since  Version 0.2.0
+     */
+    public function getHost()
+    {
+        // Case 1: Host hasn't TLD, possibly IP
+
+        if ($this->tld === null) {
+            return $this->domain;
+        }
+
+        // Case 2: Domain with TLD, but without subdomain
+
+        if ($this->subdomain === null) {
+            return implode('.', [
+                $this->domain,
+                $this->tld
+            ]);
+        }
+
+        // Case 3: Domain with TLD & subdomain
+
+        return implode('.', [
             $this->subdomain,
             $this->domain,
             $this->tld
-        );
+        ]);
     }
 
     /**
@@ -96,11 +121,11 @@ class Result implements ArrayAccess
      *
      * @param mixed $offset An offset to check for
      *
-     * @return bool
+     * @return boolean
      */
     public function offsetExists($offset)
     {
-        return $this->__isset($offset);
+        return property_exists($this, $offset);
     }
 
     /**
@@ -108,11 +133,13 @@ class Result implements ArrayAccess
      *
      * @param mixed $offset The offset to retrieve.
      *
+     * @throws \OutOfRangeException
+     *
      * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->__get($offset);
+        return $this->{$offset};
     }
 
     /**
@@ -120,12 +147,14 @@ class Result implements ArrayAccess
      *
      * @param string $name Name of params to retrieve
      *
+     * @throws \OutOfRangeException
+     *
      * @return mixed
      */
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new OutOfRangeException(sprintf('Unknown field "%s"', $name));
+            throw new \OutOfRangeException(sprintf('Unknown field "%s"', $name));
         }
 
         return $this->{$name};
@@ -134,27 +163,33 @@ class Result implements ArrayAccess
     /**
      * Magic method, makes params read-only.
      *
-     * @param string $name Name of params to retrieve
-     * @param mixed $value Value to set
+     * @param string $name  Name of params to retrieve
+     * @param mixed  $value Value to set
+     *
+     * @throws \LogicException
      *
      * @return void
      */
     public function __set($name, $value)
     {
-        throw new LogicException("Can't modify an immutable object.");
+        throw new \LogicException("Can't modify an immutable object.");
     }
 
     /**
      * Disables assigns a value to the specified offset.
      *
      * @param mixed $offset The offset to assign the value to
-     * @param mixed $value Value to set
+     * @param mixed $value  Value to set
+     *
+     * @throws \LogicException
      *
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        throw new LogicException(sprintf("Can't modify an immutable object. You tried to set '%s'.", $offset));
+        throw new \LogicException(
+            sprintf("Can't modify an immutable object. You tried to set value '%s' to field '%s'.", $value, $offset)
+        );
     }
 
     /**
@@ -162,11 +197,13 @@ class Result implements ArrayAccess
      *
      * @param mixed $offset The offset for unset
      *
+     * @throws \LogicException
+     *
      * @return void
      */
     public function offsetUnset($offset)
     {
-        throw new LogicException(sprintf("Can't modify an immutable object. You tried to unset '%s.'", $offset));
+        throw new \LogicException(sprintf("Can't modify an immutable object. You tried to unset '%s.'", $offset));
     }
 
     /**
