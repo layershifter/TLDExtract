@@ -3,13 +3,13 @@
  * PHP version 5.
  *
  * @category Classes
- * @package  LayerShifter/TLDExtract
+ *
  * @author   Alexander Fedyashov <a@fedyashov.com>
  * @author   W-Shadow <whiteshadow@w-shadow.com>
  * @license  MIT https://opensource.org/licenses/MIT
+ *
  * @link     https://github.com/layershifter/TLDExtract
  */
-
 namespace LayerShifter\TLDExtract;
 
 use LayerShifter\TLDExtract\Exceptions\IOException;
@@ -22,14 +22,13 @@ use LayerShifter\TLDExtract\Exceptions\ListException;
  */
 class Extract
 {
-
     /**
      * If $fetch is TRUE and no cached TLD set is found, the extractor will fetch the Public Suffix List live over
      * HTTP on first use.
      *
      * Set to FALSE to disable this behaviour.
      *
-     * @var boolean
+     * @var bool
      */
     private static $fetch = false;
     /**
@@ -52,24 +51,30 @@ class Extract
      *
      * @var string
      */
-    private static $resultClass = '\LayerShifter\TLDExtract\Interfaces\ResultInterface';
+    private static $resultClass = '\\LayerShifter\\TLDExtract\\Result';
 
     /**
      * Sets $resultClass param.
      *
      * @param string $resultClass
      *
+     * @throws \RuntimeException
+     *
      * @return void
      */
     public static function setResultClass($resultClass)
     {
+        if (!class_exists($resultClass)) {
+            throw new \RuntimeException(sprintf('Class %s not exists', $resultClass));
+        }
+
         self::$resultClass = $resultClass;
     }
 
     /**
      * Gets states of $fetch.
      *
-     * @return boolean
+     * @return bool
      */
     public static function isFetch()
     {
@@ -79,7 +84,7 @@ class Extract
     /**
      * Sets $fetch param.
      *
-     * @param boolean $fetch
+     * @param bool $fetch
      *
      * @return void
      */
@@ -111,7 +116,7 @@ class Extract
     }
 
     /**
-     * Gets URL of suffix list
+     * Gets URL of suffix list.
      *
      * @return string
      */
@@ -121,7 +126,7 @@ class Extract
     }
 
     /**
-     * Sets URL of suffix list
+     * Sets URL of suffix list.
      *
      * @param string $suffixFileUrl URL where stored valid suffix list
      *
@@ -146,7 +151,7 @@ class Extract
     public static function get($url)
     {
         if (self::$cacheFile === null) {
-            self::$cacheFile = __DIR__ . '/cache/.tld_set';
+            self::$cacheFile = __DIR__ . '/../cache/.tld_set';
         }
 
         $host = self::getHost($url);
@@ -157,7 +162,7 @@ class Extract
         // Check for IPv4 and IPv6 addresses.
 
         if ($tld === null && Helpers::isIp($host)) {
-            return new Result(null, $host, null);
+            return new self::$resultClass(null, $host, null);
         }
 
         $lastDot = strrpos($domain, '.');
@@ -165,24 +170,24 @@ class Extract
         // If $lastDot not FALSE, there is subdomain in domain
 
         if ($lastDot !== false) {
-            return new Result(
+            return new self::$resultClass(
                 substr($domain, 0, $lastDot),
                 substr($domain, $lastDot + 1),
                 $tld
             );
         }
 
-        return new Result(null, $domain, $tld);
+        return new self::$resultClass(null, $domain, $tld);
     }
 
     /**
-     * Method for manually updating of TLD list's cache
+     * Method for manually updating of TLD list's cache.
      *
      * @throws IOException
      * @throws ListException
      * @throws \RuntimeException
      *
-     * @return boolean
+     * @return bool
      */
     public static function updateCache()
     {
@@ -215,7 +220,7 @@ class Extract
             $host = substr($host, $position + 1);
         }
 
-        /**
+        /*
          * Remove ports from hosts, also check for IPv6 literals like
          * "[3ffe:2a00:100:7031::1]"
          *

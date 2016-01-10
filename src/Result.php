@@ -1,15 +1,15 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Classes
- * @package  LayerShifter/TLDExtract
+ *
  * @author   Alexander Fedyashov <a@fedyashov.com>
  * @author   W-Shadow <whiteshadow@w-shadow.com>
  * @license  MIT https://opensource.org/licenses/MIT
+ *
  * @link     https://github.com/layershifter/TLDExtract
  */
-
 namespace LayerShifter\TLDExtract;
 
 use LayerShifter\TLDExtract\Interfaces\ResultInterface;
@@ -66,7 +66,7 @@ class Result implements \ArrayAccess, ResultInterface
      *
      * @param string $name Field name
      *
-     * @return boolean
+     * @return bool
      */
     public function __isset($name)
     {
@@ -84,7 +84,7 @@ class Result implements \ArrayAccess, ResultInterface
     }
 
     /**
-     * Method that returns full host record
+     * Method that returns full host record.
      *
      * @return string
      *
@@ -103,7 +103,7 @@ class Result implements \ArrayAccess, ResultInterface
         if ($this->subdomain === null) {
             return implode('.', [
                 $this->domain,
-                $this->tld
+                $this->tld,
             ]);
         }
 
@@ -112,7 +112,7 @@ class Result implements \ArrayAccess, ResultInterface
         return implode('.', [
             $this->subdomain,
             $this->domain,
-            $this->tld
+            $this->tld,
         ]);
     }
 
@@ -121,7 +121,7 @@ class Result implements \ArrayAccess, ResultInterface
      *
      * @param mixed $offset An offset to check for
      *
-     * @return boolean
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -193,7 +193,7 @@ class Result implements \ArrayAccess, ResultInterface
     }
 
     /**
-     * Disables unset of an offset
+     * Disables unset of an offset.
      *
      * @param mixed $offset The offset for unset
      *
@@ -216,8 +216,8 @@ class Result implements \ArrayAccess, ResultInterface
     {
         return [
             'subdomain' => $this->subdomain,
-            'domain' => $this->domain,
-            'tld' => $this->tld
+            'domain'    => $this->domain,
+            'tld'       => $this->tld,
         ];
     }
 

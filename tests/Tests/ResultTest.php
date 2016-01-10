@@ -1,33 +1,32 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Exceptions
- * @package  LayerShifter/TLDExtract/Tests
+ *
  * @author   Alexander Fedyashov <a@fedyashov.com>
  * @license  MIT https://opensource.org/licenses/MIT
+ *
  * @link     https://github.com/layershifter/TLDExtract
  */
-
 namespace LayerShifter\TLDExtract\Tests;
 
 use LayerShifter\TLDExtract\Result;
 
 /**
- * Test that coverages all cases of LayerShifter\TLDExtract\Result
+ * Test that coverages all cases of LayerShifter\TLDExtract\Result.
  */
 class ResultTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * Object for tests
+     * Object for tests.
      *
      * @var Result
      */
     private $entity;
 
     /**
-     * Method that setups test's environment
+     * Method that setups test's environment.
      *
      * @return void
      */
@@ -37,7 +36,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for __constructor
+     * Test for __constructor.
      *
      * @return void
      */
@@ -67,34 +66,34 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for toJson()
+     * Test for toJson().
      *
      * @return void
      */
     public function testToJson()
     {
         self::assertJsonStringEqualsJsonString(
-            json_encode((object)[
+            json_encode((object) [
                 'subdomain' => null,
-                'domain' => '192.168.0.1',
-                'tld' => null
+                'domain'    => '192.168.0.1',
+                'tld'       => null,
             ]),
             $this->entity->toJson()
         );
     }
 
     /**
-     * Test for magic method __toString()
+     * Test for magic method __toString().
      *
      * @return void
      */
     public function testToString()
     {
-        self::assertEquals('192.168.0.1', (string)$this->entity);
+        self::assertEquals('192.168.0.1', (string) $this->entity);
     }
 
     /**
-     * Test for magic method __isset()
+     * Test for magic method __isset().
      *
      * @return void
      */
@@ -104,14 +103,14 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(true, $this->entity->domain !== null);
         self::assertEquals(true, $this->entity->tld === null);
 
-        /** @noinspection PhpUndefinedFieldInspection
+        /* @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
          */
         self::assertEquals(false, isset($this->entity->test));
     }
 
     /**
-     * Test for magic method __set()
+     * Test for magic method __set().
      *
      * @return void
      */
@@ -123,7 +122,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for magic method __get()
+     * Test for magic method __get().
      *
      * @return void
      */
@@ -131,14 +130,14 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     {
         self::setExpectedException('OutOfRangeException');
 
-        /** @noinspection PhpUndefinedFieldInspection
+        /* @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
          */
         $this->entity->domain1;
     }
 
     /**
-     * Test for magic method __offsetSet()
+     * Test for magic method __offsetSet().
      *
      * @return void
      */
@@ -150,7 +149,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for magic method __offsetGet()
+     * Test for magic method __offsetGet().
      *
      * @return void
      */
@@ -160,7 +159,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for magic method __offsetUnset()
+     * Test for magic method __offsetUnset().
      *
      * @return void
      */

@@ -3,16 +3,16 @@
  * PHP version 5.
  *
  * @category Exceptions
- * @package  LayerShifter/TLDExtract/Exceptions
+ *
  * @author   Alexander Fedyashov <a@fedyashov.com>
  * @license  MIT https://opensource.org/licenses/MIT
+ *
  * @link     https://github.com/layershifter/TLDExtract
  */
-
 namespace LayerShifter\TLDExtract\Exceptions;
 
 /**
- * Exception for filesystem errors
+ * Exception for filesystem errors.
  */
 class IOException extends \Exception
 {
@@ -22,7 +22,7 @@ class IOException extends \Exception
      * Constructor of exception.
      *
      * @param string     $message  Message for exception
-     * @param integer    $code     Error code
+     * @param int        $code     Error code
      * @param \Exception $previous Parent exception
      * @param null       $filename Filename
      */
@@ -33,7 +33,7 @@ class IOException extends \Exception
     }
 
     /**
-     * Gets filename that caused error
+     * Gets filename that caused error.
      *
      * @return string
      */

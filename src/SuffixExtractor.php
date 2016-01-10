@@ -1,14 +1,14 @@
 <?php
 /**
- * PHP version 5
+ * PHP version 5.
  *
  * @category Classes
- * @package  LayerShifter/TLDExtract
+ *
  * @author   Alexander Fedyashov <a@fedyashov.com>
  * @license  MIT https://opensource.org/licenses/MIT
+ *
  * @link     https://github.com/layershifter/TLDExtract
  */
-
 namespace LayerShifter\TLDExtract;
 
 use GuzzleHttp\Client;
@@ -53,7 +53,7 @@ class SuffixExtractor
      * @throws IOException
      * @throws \RuntimeException
      *
-     * @return boolean
+     * @return bool
      */
     public function fetchTldList()
     {
@@ -87,7 +87,7 @@ class SuffixExtractor
     }
 
     /**
-     * Extracts host & TLD from input string. Based on algorithm described in https://publicsuffix.org/list/
+     * Extracts host & TLD from input string. Based on algorithm described in https://publicsuffix.org/list/.
      *
      * @param string $host Host for extraction
      *
@@ -99,7 +99,7 @@ class SuffixExtractor
 
         for ($i = 0, $count = count($parts); $i < $count; $i++) {
             $maybeTld = implode('.', array_slice($parts, $i));
-            $exceptionTld = '!' . $maybeTld;
+            $exceptionTld = '!'.$maybeTld;
 
             if (array_key_exists($exceptionTld, $this->tldList)) {
                 return [
@@ -108,12 +108,12 @@ class SuffixExtractor
                 ];
             }
 
-            $wildcardTld = '*.' . implode('.', array_slice($parts, $i + 1));
+            $wildcardTld = '*.'.implode('.', array_slice($parts, $i + 1));
 
             if (array_key_exists($wildcardTld, $this->tldList) || array_key_exists($maybeTld, $this->tldList)) {
                 return [
                     implode('.', array_slice($parts, 0, $i)),
-                    $maybeTld
+                    $maybeTld,
                 ];
             }
         }
@@ -122,7 +122,7 @@ class SuffixExtractor
     }
 
     /**
-     * Disables class cloning
+     * Disables class cloning.
      *
      * @return void
      */
@@ -131,7 +131,7 @@ class SuffixExtractor
     }
 
     /**
-     * Gets instance of current class
+     * Gets instance of current class.
      *
      * @throws IOException
      * @throws ListException
@@ -149,13 +149,13 @@ class SuffixExtractor
     }
 
     /**
-     * Method that load TLD list from cache or URL to object's property
+     * Method that load TLD list from cache or URL to object's property.
      *
      * @throws IOException
      * @throws ListException
      * @throws \RuntimeException
      *
-     * @return boolean
+     * @return bool
      */
     private function loadTldList()
     {
@@ -179,9 +179,9 @@ class SuffixExtractor
     }
 
     /**
-     * Tries load file with TLDs from cache
+     * Tries load file with TLDs from cache.
      *
-     * @return boolean
+     * @return bool
      */
     private function loadFromCache()
     {

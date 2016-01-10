@@ -1,6 +1,9 @@
 # TLDExtract
 
+[![Latest Stable Version](https://poser.pugx.org/layershifter/tld-extract/v/stable)](https://packagist.org/packages/layershifter/tld-extract)
 [![Build Status](https://travis-ci.org/layershifter/TLDExtract.svg)](https://travis-ci.org/layershifter/TLDExtract)
+[![Total Downloads](https://poser.pugx.org/layershifter/tld-extract/downloads)](https://packagist.org/packages/layershifter/tld-extract)
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
 
@@ -55,6 +58,7 @@ which is port of [Python module](https://github.com/john-kurkowski/tldextract).
 ## Compatible PHP versions
 - PHP 5.5
 - PHP 5.6
+- PHP 7
 - HHVM
 
 ## Installation
@@ -63,7 +67,23 @@ Latest release via Composer:
 
     $ composer require layershifter/tld-extract
 
-## Note About Caching & Advanced Usage
+## Note About Advanced Usage & Caching
+
+- [Advanced usage](#note-advanced)
+- [Caching](#note-caching)
+
+### <a name="note-advanced"></a> Advanced usage
+
+For overriding object that will be returned in result you can create own class that implements `\LayerShifter\TLDExtract\Interfaces\ResultInterface`.
+
+For example:
+
+    class OwnResult implements \LayerShifter\TLDExtract\Interfaces\ResultInterface {
+    }
+    
+    Extract::setResultClass('OwnResult');
+
+### <a name="note-caching"></a> Caching
 
 By default `TLDExtract` downloads TLD list from publicsuffix.org, caches it and never update.
 

@@ -3,27 +3,26 @@
  * PHP version 5.
  *
  * @category Classes
- * @package  LayerShifter/TLDExtract
+ *
  * @author   Alexander Fedyashov <a@fedyashov.com>
  * @license  MIT https://opensource.org/licenses/MIT
+ *
  * @link     https://github.com/layershifter/TLDExtract
  */
-
 namespace LayerShifter\TLDExtract;
 
 /**
- * Includes static functions (helpers) for package
+ * Includes static functions (helpers) for package.
  */
 class Helpers
 {
-
     /**
-     * Implementation startsWith()
+     * Implementation startsWith().
      *
      * @param string $haystack String where $needle will be searched
      * @param string $needle   String that will be searched
      *
-     * @return boolean
+     * @return bool
      */
     public static function startsWith($haystack, $needle)
     {
@@ -32,12 +31,12 @@ class Helpers
     }
 
     /**
-     * Implementation endsWith() from @url
+     * Implementation endsWith() from @url.
      *
      * @param string $haystack String where $needle will be searched
      * @param string $needle   String that will be searched
      *
-     * @return boolean
+     * @return bool
      */
     public static function endsWith($haystack, $needle)
     {
@@ -51,16 +50,16 @@ class Helpers
      *
      * @param string $host Host that will be checked
      *
-     * @return boolean
+     * @return bool
      */
     public static function isIp($host)
     {
         // Strip the wrapping square brackets from IPv6 addresses
 
-        if (Helpers::startsWith($host, '[') && Helpers::endsWith($host, ']')) {
+        if (self::startsWith($host, '[') && self::endsWith($host, ']')) {
             $host = substr($host, 1, -1);
         }
 
-        return (bool)filter_var($host, FILTER_VALIDATE_IP);
+        return (bool) filter_var($host, FILTER_VALIDATE_IP);
     }
 }
