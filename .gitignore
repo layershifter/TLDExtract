@@ -1,7 +1,7 @@
-# Dev
-/vendor
-/composer.lock
-/composer.phar
+# IDE
+.idea/
 
-# Cache
-/cache/.tld_set
+# PHP
+vendor
+composer.lock
+composer.phar
