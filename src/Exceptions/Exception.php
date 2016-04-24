@@ -26,33 +26,9 @@
 namespace LayerShifter\TLDExtract\Exceptions;
 
 /**
- * Exception for filesystem errors.
+ * Base exception.
  */
-class IOException extends Exception
+class Exception extends \Exception
 {
-    private $filename;
 
-    /**
-     * Constructor of exception.
-     *
-     * @param string     $message  Message for exception
-     * @param int        $code     Error code
-     * @param \Exception $previous Parent exception
-     * @param null       $filename Filename
-     */
-    public function __construct($message, $code = 0, \Exception $previous = null, $filename = null)
-    {
-        $this->filename = $filename;
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * Gets filename that caused error.
-     *
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->filename;
-    }
 }

@@ -1,19 +1,33 @@
 <?php
 /**
- * PHP version 5.
+ * The MIT License (MIT)
  *
- * @category Exceptions
+ * Copyright (c) 2016 Alexander Fedyashov
  *
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @license  MIT https://opensource.org/licenses/MIT
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * @link     https://github.com/layershifter/TLDExtract
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
+
 namespace LayerShifter\TLDExtract\Exceptions;
 
 /**
  * Exception for errors with TLD list.
  */
-class ListException extends \Exception
+class ListException extends Exception
 {
 }
