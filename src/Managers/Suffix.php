@@ -1,9 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: alexander
- * Date: 25.04.16
- * Time: 15:35
+ * TLDExtract: Domain parser library.
+ *
+ * @link      https://github.com/layershifter/TLDExtract
+ *
+ * @copyright Copyright (c) 2016, Alexander Fedyashov
+ * @license   https://raw.githubusercontent.com/layershifter/TLDExtract/master/LICENSE MIT License
  */
 
 namespace LayerShifter\TLDExtract\Managers;
@@ -107,7 +109,7 @@ class Suffix
      * @throws IOException
      *
      * @return boolean Returns TRUE if fetch was completed successfully
-     *                 
+     *
      * @TODO Remove guzzle
      */
     public function fetchSuffixList()

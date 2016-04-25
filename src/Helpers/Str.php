@@ -43,6 +43,18 @@ class Str
     }
 
     /**
+     * Convert the given string to lower-case.
+     *
+     * @param  string $value
+     *
+     * @return string
+     */
+    public static function lower($value)
+    {
+        return mb_strtolower($value, 'UTF-8');
+    }
+
+    /**
      * Returns the portion of string specified by the start and length parameters.
      *
      * @param  string   $string
