@@ -13,9 +13,9 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use LayerShifter\TLDExtract\Extract;
+use LayerShifter\TLDExtract\Factory;
 
-$result = Extract::get('http://forums.news.cnn.com/');
+$result = Factory::get('http://forums.news.cnn.com/');
 
 var_dump($result->toJson());
 
