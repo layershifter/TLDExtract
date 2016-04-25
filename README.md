@@ -1,7 +1,7 @@
 # TLDExtract
 
 [![Latest Stable Version](https://poser.pugx.org/layershifter/tld-extract/v/stable)](https://packagist.org/packages/layershifter/tld-extract)
-[![Build Status](https://travis-ci.org/layershifter/TLDExtract.svg)](https://travis-ci.org/layershifter/TLDExtract)
+[![Build Status](https://travis-ci.org/layershifter/TLDExtract.svg?branch=master)](https://travis-ci.org/layershifter/TLDExtract)
 [![Total Downloads](https://poser.pugx.org/layershifter/tld-extract/downloads)](https://packagist.org/packages/layershifter/tld-extract)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
