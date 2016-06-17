@@ -1,29 +1,26 @@
-<!--suppress ALL -->
-<phpunit
-        addUncoveredFilesFromWhitelist="true"
-        processUncoveredFilesFromWhitelist="true"
-        backupGlobals="false"
-        backupStaticAttributes="false"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        bootstrap="./tests/Bootstrap.php"
-        >
-
-    <testsuite name="TLDExtract">
-        <directory>./tests/Tests/</directory>
-    </testsuite>
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         syntaxCheck="true"
+         verbose="true"
+>
+    <testsuites>
+        <testsuite name="TLDExtract Test Suite">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
 
     <filter>
         <whitelist>
             <directory>./src</directory>
-            <directory>./tests</directory>
         </whitelist>
-        <blacklist>
-            <directory>./vendor/</directory>
-            <file>./vendor/autoload.php</file>
-        </blacklist>
     </filter>
-
 </phpunit>

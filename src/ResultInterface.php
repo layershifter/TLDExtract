@@ -10,7 +10,7 @@
  * @link     https://github.com/layershifter/TLDExtract
  * @since    Version 0.2.0
  */
-namespace LayerShifter\TLDExtract\Interfaces;
+namespace LayerShifter\TLDExtract;
 
 interface ResultInterface
 {

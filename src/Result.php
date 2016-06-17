@@ -12,8 +12,6 @@
  */
 namespace LayerShifter\TLDExtract;
 
-use LayerShifter\TLDExtract\Interfaces\ResultInterface;
-
 /**
  * This class holds the components of a domain name.
  *
@@ -80,8 +78,10 @@ class Result implements \ArrayAccess, ResultInterface
      */
     public function __toString()
     {
-        return $this->getHost();
+        return $this->getHostname();
     }
+
+    //public function getSubdomain($host);
 
     /**
      * Method that returns full host record.
@@ -90,7 +90,7 @@ class Result implements \ArrayAccess, ResultInterface
      *
      * @since  Version 0.2.0
      */
-    public function getHost()
+    public function getHostname()
     {
         // Case 1: Host hasn't TLD, possibly IP
 
@@ -114,6 +114,15 @@ class Result implements \ArrayAccess, ResultInterface
             $this->domain,
             $this->tld,
         ]);
+    }
+
+    public function getRegistrableDomain()
+    {
+        if (null === $this->tld) {
+            return null;
+        }
+
+        return null === $this->domain ? null : $this->domain . '.' . $this->tld;
     }
 
     /**

@@ -1,7 +1,8 @@
-# IDE
+# IDE specific
 .idea/
 
-# PHP
-vendor
+# PHP specific
+build/
+vendor/
 composer.lock
 composer.phar
