@@ -1,27 +1,33 @@
 {
   "name": "layershifter/tld-extract",
-  "description": "TLDExtract package",
+  "description": "TLDExtract, library for extracting parts of domain, e.q. domain parser",
   "minimum-stability": "stable",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "Alexander Fedyashov",
       "email": "a@fedyashov.com"
     }
   ],
-  "require": {
-    "php": ">=5.4",
-    "ext-json": "*",
-    "guzzlehttp/guzzle": "^6.1"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "4.8.*",
-    "squizlabs/php_codesniffer": "2.*",
-    "phpmd/phpmd": "@stable"
-  },
   "autoload": {
     "psr-4": {
       "LayerShifter\\TLDExtract\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "LayerShifter\\TLDExtract\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=5.5",
+    "layershifter/tld-database": "^1.0",
+    "layershifter/tld-support": "^1.0"
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "dev-master",
+    "phpmd/phpmd": "@stable",
+    "phpunit/phpunit": "4.8.*",
+    "squizlabs/php_codesniffer": "2.*"
   }
 }
