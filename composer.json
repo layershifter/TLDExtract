@@ -21,6 +21,7 @@
   },
   "require": {
     "php": ">=5.5",
+    "ext-intl": "*",
     "layershifter/tld-database": "^1.0",
     "layershifter/tld-support": "^1.1"
   },

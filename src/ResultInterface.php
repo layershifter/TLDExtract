@@ -1,15 +1,13 @@
 <?php
 /**
- * PHP version 5.
+ * TLDExtract: Library for extraction of domain parts e.g. TLD. Domain parser that uses Public Suffix List.
  *
- * @category Interfaces
+ * @link      https://github.com/layershifter/TLDExtract
  *
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @license  MIT https://opensource.org/licenses/MIT
- *
- * @link     https://github.com/layershifter/TLDExtract
- * @since    Version 0.2.0
+ * @copyright Copyright (c) 2016, Alexander Fedyashov
+ * @license   https://raw.githubusercontent.com/layershifter/TLDExtract/master/LICENSE Apache 2.0 License
  */
+
 namespace LayerShifter\TLDExtract;
 
 interface ResultInterface
