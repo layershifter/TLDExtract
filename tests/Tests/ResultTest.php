@@ -11,6 +11,7 @@
  */
 namespace LayerShifter\TLDExtract\Tests;
 
+use LayerShifter\TLDExtract\Extract;
 use LayerShifter\TLDExtract\Result;
 
 /**
@@ -66,6 +67,38 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test domain entry.
+     *
+     * @return void
+     */
+    public function testDomain()
+    {
+        $extract = new Extract();
+        $result = $extract->parse('shop.github.com');
+
+        static::assertEquals('shop.github.com', $result->getFullHost());
+        static::assertEquals('github.com', $result->getRegistrableDomain());
+        static::assertTrue($result->isValidDomain());
+        static::assertFalse($result->isIp());
+    }
+
+    /**
+     * Test IP entry.
+     *
+     * @return void
+     */
+    public function testIp()
+    {
+        $extract = new Extract();
+        $result = $extract->parse('192.168.0.1');
+
+        static::assertEquals('192.168.0.1', $result->getFullHost());
+        static::assertNull($result->getRegistrableDomain());
+        static::assertFalse($result->isValidDomain());
+        static::assertTrue($result->isIp());
+    }
+
+    /**
      * Test for toJson().
      *
      * @return void
@@ -116,8 +149,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testSet()
     {
-        static::setExpectedException('LogicException');
-
+        $this->setExpectedException('LogicException');
         $this->entity->offsetSet('domain', 'another-domain');
     }
 
@@ -128,7 +160,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        static::setExpectedException('OutOfRangeException');
+        $this->setExpectedException('OutOfRangeException');
 
         /* @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
@@ -143,8 +175,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetSet()
     {
-        static::setExpectedException('LogicException');
-
+        $this->setExpectedException('LogicException');
         $this->entity['domain'] = 'another-domain';
     }
 
@@ -165,8 +196,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetUnset()
     {
-        static::setExpectedException('LogicException');
-
+        $this->setExpectedException('LogicException');
         unset($this->entity['domain']);
     }
 }
