@@ -5,7 +5,7 @@
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
+[![Coverage Status][ico-coverage]][link-coverage]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![PHP 7 ready](icon-php7ready)][link-travis]
@@ -150,13 +150,13 @@ This library is released under the Apache 2.0 license. Please see [License File]
 [ico-version]: https://img.shields.io/packagist/v/layershifter/tld-extract.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-Apache2-brightgreen.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/layershifter/TLDExtract/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/layershifter/TLDExtract.svg?style=flat-square
+[ico-coverage]: https://codeclimate.com/github/layershifter/TLDExtract/badges/coverage.svg
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/layershifter/TLDExtract.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/layershifter/tld-extract.svg?style=flat-square
 [ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
 
 [link-packagist]: https://packagist.org/packages/layershifter/tld-extract
 [link-travis]: https://travis-ci.org/layershifter/TLDExtract
-[link-scrutinizer]: https://scrutinizer-ci.com/g/layershifter/TLDExtract/code-structure
+[link-coverage]: https://codeclimate.com/github/layershifter/TLDExtract/coverage
 [link-code-quality]: https://scrutinizer-ci.com/g/layershifter/TLDExtract
 [link-downloads]: https://packagist.org/packages/layershifter/tld-extract
