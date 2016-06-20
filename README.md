@@ -147,16 +147,16 @@ This library is released under the Apache 2.0 license. Please see [License File]
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
-[ico-version]: https://img.shields.io/packagist/v/layershifter/TLDExtract.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/layershifter/tld-extract.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-Apache2-brightgreen.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/layershifter/TLDExtract/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/layershifter/TLDExtract.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/layershifter/TLDExtract.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/layershifter/TLDExtract.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/layershifter/tld-extract.svg?style=flat-square
 [ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
 
-[link-packagist]: https://packagist.org/packages/layershifter/TLDExtract
+[link-packagist]: https://packagist.org/packages/layershifter/tld-extract
 [link-travis]: https://travis-ci.org/layershifter/TLDExtract
 [link-scrutinizer]: https://scrutinizer-ci.com/g/layershifter/TLDExtract/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/layershifter/TLDExtract
-[link-downloads]: https://packagist.org/packages/layershifter/TLDExtract
+[link-downloads]: https://packagist.org/packages/layershifter/tld-extract
