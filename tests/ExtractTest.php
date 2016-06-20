@@ -45,12 +45,16 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
+        $defaultMode = Extract::MODE_ALLOW_ICCAN
+            | Extract::MODE_ALLOW_PRIVATE
+            | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES;
+
         // Variant 1.
 
         $extract = new Extract();
 
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(null, 'extractionMode', $extract);
+        static::assertAttributeEquals($defaultMode, 'extractionMode', $extract);
         static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
 
         // Variant 2.
@@ -58,7 +62,7 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         $extract = new Extract(__DIR__ . '/sample-database.php');
 
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(null, 'extractionMode', $extract);
+        static::assertAttributeEquals($defaultMode, 'extractionMode', $extract);
         static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
 
         // Variant 3.
@@ -66,32 +70,40 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         $extract = new Extract(null, SampleResult::class);
 
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(null, 'extractionMode', $extract);
+        static::assertAttributeEquals($defaultMode, 'extractionMode', $extract);
         static::assertAttributeEquals(SampleResult::class, 'resultClassName', $extract);
 
         // Variant 4.
 
-        $extract = new Extract(null, null, Extract::MODE_DISABLE_PRIVATE);
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_ICCAN);
 
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(Extract::MODE_DISABLE_PRIVATE, 'extractionMode', $extract);
+        static::assertAttributeEquals(Extract::MODE_ALLOW_ICCAN, 'extractionMode', $extract);
         static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
 
         // Variant 5.
 
-        $extract = new Extract(null, null, Extract::MODE_ONLY_EXISTING_SUFFIXES);
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_PRIVATE);
 
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(Extract::MODE_ONLY_EXISTING_SUFFIXES, 'extractionMode', $extract);
+        static::assertAttributeEquals(Extract::MODE_ALLOW_PRIVATE, 'extractionMode', $extract);
         static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
 
         // Variant 6.
 
-        $extract = new Extract(null, null, Extract::MODE_DISABLE_PRIVATE | Extract::MODE_ONLY_EXISTING_SUFFIXES);
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
+
+        static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
+        static::assertAttributeEquals(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES, 'extractionMode', $extract);
+        static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
+
+        // Variant 7.
+
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
 
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
         static::assertAttributeEquals(
-            Extract::MODE_DISABLE_PRIVATE | Extract::MODE_ONLY_EXISTING_SUFFIXES,
+            Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
             'extractionMode',
             $extract
         );
@@ -143,7 +155,7 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
             'Invalid argument type, extractionMode must be one of defined constants'
         );
 
-        new Extract(null, null, 10);
+        new Extract(null, null, -10);
     }
 
     /**
@@ -360,7 +372,7 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
      */
     private function checkHost($hostname, $expectedResult)
     {
-        static::assertEquals($expectedResult, $this->extract->parse($hostname)->getHost());
+        static::assertEquals($expectedResult, $this->extract->parse($hostname)->getHostname());
     }
 
     /**
@@ -387,13 +399,13 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for parse() with MODE_ONLY_EXISTING_SUFFIXES option.
+     * Test for parse() withExtract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE options.
      *
      * @return void
      */
     public function testParseOnlyExisting()
     {
-        $extract = new Extract(null, null, Extract::MODE_ONLY_EXISTING_SUFFIXES);
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE);
 
         static::assertNull($extract->parse('example.example')->getSuffix());
         static::assertNull($extract->parse('a.example.example')->getSuffix());
@@ -407,13 +419,13 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for parse() with MODE_DISABLE_PRIVATE option.
+     * Test for parse() with Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE options.
      *
      * @return void
      */
     public function testParseDisablePrivate()
     {
-        $extract = new Extract(null, null, Extract::MODE_DISABLE_PRIVATE);
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
 
         static::assertEquals('example', $extract->parse('example.example')->getSuffix());
         static::assertEquals('example', $extract->parse('a.example.example')->getSuffix());
@@ -431,13 +443,13 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for parse() with MODE_ONLY_EXISTING_SUFFIXES and MODE_DISABLE_PRIVATE options.
+     * Test for parse() with MODE_ALLOW_ICCAN option.
      *
      * @return void
      */
-    public function testParseComboOptions()
+    public function testParseICCANOption()
     {
-        $extract = new Extract(null, null, Extract::MODE_DISABLE_PRIVATE | Extract::MODE_ONLY_EXISTING_SUFFIXES);
+        $extract = new Extract(null, null, Extract::MODE_ALLOW_ICCAN);
 
         static::assertNull($extract->parse('example.example')->getSuffix());
         static::assertNull($extract->parse('a.example.example')->getSuffix());

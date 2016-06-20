@@ -25,13 +25,17 @@ class Extract
 {
 
     /**
-     * @const int If this option provided, extract will not consider private suffixes.
+     * @const int If this option provided, extract will consider ICCAN suffixes.
      */
-    const MODE_DISABLE_PRIVATE = 2;
+    const MODE_ALLOW_ICCAN = 2;
     /**
-     * @const int If this option provided, extract will not consider custom domains.
+     * @const int If this option provided, extract will consider private suffixes.
      */
-    const MODE_ONLY_EXISTING_SUFFIXES = 4;
+    const MODE_ALLOW_PRIVATE = 4;
+    /**
+     * @const int If this option provided, extract will consider custom domains.
+     */
+    const MODE_ALLOW_NOT_EXISTING_SUFFIXES = 8;
     /**
      * @const string RFC 3986 compliant scheme regex pattern.
      *
@@ -83,6 +87,10 @@ class Extract
         // Checks for extractionMode argument.
 
         if (null === $extractionMode) {
+            $this->extractionMode = static::MODE_ALLOW_ICCAN
+                | static::MODE_ALLOW_PRIVATE
+                | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES;
+
             return;
         }
 
@@ -91,9 +99,13 @@ class Extract
         }
 
         if (!in_array($extractionMode, [
-            static::MODE_DISABLE_PRIVATE,
-            static::MODE_ONLY_EXISTING_SUFFIXES,
-            static::MODE_DISABLE_PRIVATE | static::MODE_ONLY_EXISTING_SUFFIXES
+            static::MODE_ALLOW_ICCAN,
+            static::MODE_ALLOW_PRIVATE,
+            static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_PRIVATE,
+            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES
         ], true)
         ) {
             throw new RuntimeException(
@@ -228,7 +240,7 @@ class Extract
         $suffix = $this->parseSuffix($hostname);
 
         if (null === $suffix) {
-            if ($this->extractionMode & static::MODE_ONLY_EXISTING_SUFFIXES) {
+            if (!($this->extractionMode & static::MODE_ALLOW_NOT_EXISTING_SUFFIXES)) {
                 return null;
             }
 
@@ -293,10 +305,12 @@ class Extract
             return false;
         }
 
-        if ($this->extractionMode & static::MODE_DISABLE_PRIVATE) {
-            return !$this->suffixStore->isPrivate($entry);
+        $type = $this->suffixStore->getType($entry);
+
+        if ($this->extractionMode & static::MODE_ALLOW_ICCAN && $type === Store::TYPE_ICCAN) {
+            return true;
         }
 
-        return true;
+        return $this->extractionMode & static::MODE_ALLOW_PRIVATE && $type === Store::TYPE_PRIVATE;
     }
 }

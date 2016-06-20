@@ -10,51 +10,151 @@
 
 namespace LayerShifter\TLDExtract;
 
+use LayerShifter\TLDSupport\Helpers\IP;
+
 /**
  * This class holds the components of a domain name.
  *
- * You can access the components using either property syntax or array syntax. For example, "echo $result->tld" and
- * "echo $result['tld']" will both work and output the same string.
+ * You can access the components using either method, property or array syntax. For example, "echo $result->suffix" and
+ * "echo $result['suffix']" will both work and output the same string.
  *
  * All properties are read-only.
  *
- * @property-read $subdomain
- * @property-read $domain
- * @property-read $tld
+ * @property-read null|string $subdomain
+ * @property-read null|string $hostname
+ * @property-read null|string $suffix
  */
 class Result implements \ArrayAccess, ResultInterface
 {
     /**
      * The subdomain. For example, the subdomain of "a.b.google.com" is "a.b".
      *
-     * @var string
+     * @var null|string
      */
     private $subdomain;
     /**
-     * The registered domain. For example, in "a.b.google.com" the registered domain is "google".
+     * Hostname part of domain or IP-address. For example, in "a.b.google.com" the registered domain is "google".
      *
-     * @var string
+     * @var null|string
      */
-    private $domain;
+    private $hostname;
     /**
      * The top-level domain / public suffix. For example: "com", "co.uk", "act.edu.au".
      *
-     * @var string
+     * @var null|string
      */
-    private $tld;
+    private $suffix;
 
     /**
      * Constructor of class.
      *
-     * @param $subdomain
-     * @param $domain
-     * @param $tld
+     * @param null|string $subdomain
+     * @param null|string $hostname
+     * @param null|string $suffix
      */
-    public function __construct($subdomain, $domain, $tld)
+    public function __construct($subdomain, $hostname, $suffix)
     {
         $this->subdomain = $subdomain;
-        $this->domain = $domain;
-        $this->tld = $tld;
+        $this->hostname = $hostname;
+        $this->suffix = $suffix;
+    }
+
+    /**
+     * Returns subdomain if it exists.
+     *
+     * @return null|string
+     */
+    public function getSubdomain()
+    {
+        return $this->subdomain;
+    }
+
+    /**
+     * Return subdomains if they exist, example subdomain is "www.news", method will return array ['www', 'bbc'].
+     *
+     * @return null|array
+     */
+    public function getSubdomains()
+    {
+        return null === $this->subdomain ? null : explode('.', $this->subdomain);
+    }
+
+    /**
+     * Returns hostname if it exists.
+     *
+     * @return null|string
+     */
+    public function getHostname()
+    {
+        return $this->hostname;
+    }
+
+    /**
+     * Returns suffix if it exists.
+     *
+     * @return null|string
+     */
+    public function getSuffix()
+    {
+        return $this->suffix;
+    }
+
+    /**
+     * Method that returns full host record.
+     *
+     * @return string
+     */
+    public function getFullHost()
+    {
+        // Case 1: Host hasn't suffix, possibly IP.
+
+        if (null === $this->suffix) {
+            return $this->hostname;
+        }
+
+        // Case 2: Domain with suffix, but without subdomain.
+
+        if (null === $this->subdomain) {
+            return $this->hostname . '.' . $this->subdomain;
+        }
+
+        // Case 3: Domain with suffix & subdomain.
+
+        return implode('.', [$this->subdomain, $this->hostname, $this->suffix]);
+    }
+
+    /**
+     * Returns registrable domain or null.
+     *
+     * @return null|string
+     */
+    public function getRegistrableDomain()
+    {
+        if (null === $this->suffix) {
+            return null;
+        }
+
+        return null === $this->hostname ? null : $this->hostname . '.' . $this->suffix;
+    }
+
+    /**
+     * Returns true if domain is valid.
+     *
+     * @return bool
+     */
+    public function isValidDomain()
+    {
+        return null !== $this->getRegistrableDomain();
+    }
+
+    /**
+     * Returns true is result is IP.
+     *
+     * @return bool
+     */
+    public function isIp()
+    {
+        return null === $this->suffix && IP::isValid($this->hostname);
     }
 
     /**
@@ -76,61 +176,7 @@ class Result implements \ArrayAccess, ResultInterface
      */
     public function __toString()
     {
-        return $this->getHostname();
-    }
-
-    //public function getSubdomain($host);
-
-    /**
-     * Method that returns full host record.
-     *
-     * @return string
-     *
-     * @since  Version 0.2.0
-     */
-    public function getHostname()
-    {
-        // Case 1: Host hasn't TLD, possibly IP
-
-        if ($this->tld === null) {
-            return $this->domain;
-        }
-
-        // Case 2: Domain with TLD, but without subdomain
-
-        if ($this->subdomain === null) {
-            return implode('.', [
-                $this->domain,
-                $this->tld,
-            ]);
-        }
-
-        // Case 3: Domain with TLD & subdomain
-
-        return implode('.', [
-            $this->subdomain,
-            $this->domain,
-            $this->tld,
-        ]);
-    }
-
-    public function getHost()
-    {
-        return $this->domain;
-    }
-
-    public function getSuffix()
-    {
-        return $this->tld;
-    }
-
-    public function getRegistrableDomain()
-    {
-        if (null === $this->tld) {
-            return null;
-        }
-
-        return null === $this->domain ? null : $this->domain . '.' . $this->tld;
+        return $this->getFullHost();
     }
 
     /**
@@ -233,8 +279,8 @@ class Result implements \ArrayAccess, ResultInterface
     {
         return [
             'subdomain' => $this->subdomain,
-            'domain'    => $this->domain,
-            'tld'       => $this->tld,
+            'hostname'  => $this->hostname,
+            'suffix'    => $this->suffix,
         ];
     }
 
