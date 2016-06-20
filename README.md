@@ -8,7 +8,8 @@
 [![Coverage Status][ico-coverage]][link-coverage]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![PHP 7 ready](icon-php7ready)][link-travis]
+[![PHP 7 ready](ico-php7ready)][link-travis]
+[![SensioLabsInsight](ico-sensio)](link-sensio)
 
 ---
 
@@ -154,9 +155,11 @@ This library is released under the Apache 2.0 license. Please see [License File]
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/layershifter/TLDExtract.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/layershifter/tld-extract.svg?style=flat-square
 [ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
+[ico-sensio]: https://insight.sensiolabs.com/projects/d433ad39-60fa-4493-a4ba-7109e71737af/big.png
 
 [link-packagist]: https://packagist.org/packages/layershifter/tld-extract
 [link-travis]: https://travis-ci.org/layershifter/TLDExtract
 [link-coverage]: https://codeclimate.com/github/layershifter/TLDExtract/coverage
 [link-code-quality]: https://scrutinizer-ci.com/g/layershifter/TLDExtract
 [link-downloads]: https://packagist.org/packages/layershifter/tld-extract
+[link-sensio]: https://insight.sensiolabs.com/projects/d433ad39-60fa-4493-a4ba-7109e71737af
