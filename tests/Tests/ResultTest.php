@@ -74,9 +74,51 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testDomain()
     {
         $extract = new Extract();
+        $result = $extract->parse('github.com');
+
+        static::assertEquals('github.com', $result->getFullHost());
+        static::assertEquals(null, $result->getSubdomain());
+        static::assertEquals(null, $result->getSubdomains());
+        static::assertEquals('github.com', $result->getRegistrableDomain());
+        static::assertTrue($result->isValidDomain());
+        static::assertFalse($result->isIp());
+    }
+
+    /**
+     * Test subdomain entry.
+     *
+     * @return void
+     */
+    public function testSubDomain()
+    {
+        $extract = new Extract();
         $result = $extract->parse('shop.github.com');
 
         static::assertEquals('shop.github.com', $result->getFullHost());
+        static::assertEquals('shop', $result->getSubdomain());
+        static::assertCount(1, $result->getSubdomains());
+        static::assertContainsOnly('string', $result->getSubdomains());
+        static::assertEquals(['shop'], $result->getSubdomains());
+        static::assertEquals('github.com', $result->getRegistrableDomain());
+        static::assertTrue($result->isValidDomain());
+        static::assertFalse($result->isIp());
+    }
+
+    /**
+     * Test subdomain entries.
+     *
+     * @return void
+     */
+    public function testSubdomains()
+    {
+        $extract = new Extract();
+        $result = $extract->parse('new.shop.github.com');
+
+        static::assertEquals('new.shop.github.com', $result->getFullHost());
+        static::assertEquals('new.shop', $result->getSubdomain());
+        static::assertCount(2, $result->getSubdomains());
+        static::assertContainsOnly('string', $result->getSubdomains());
+        static::assertEquals(['new', 'shop'], $result->getSubdomains());
         static::assertEquals('github.com', $result->getRegistrableDomain());
         static::assertTrue($result->isValidDomain());
         static::assertFalse($result->isIp());
@@ -93,6 +135,8 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $result = $extract->parse('192.168.0.1');
 
         static::assertEquals('192.168.0.1', $result->getFullHost());
+        static::assertEquals(null, $result->getSubdomain());
+        static::assertEquals(null, $result->getSubdomains());
         static::assertNull($result->getRegistrableDomain());
         static::assertFalse($result->isValidDomain());
         static::assertTrue($result->isIp());
@@ -150,7 +194,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testSet()
     {
         $this->setExpectedException('LogicException');
-        $this->entity->offsetSet('domain', 'another-domain');
+        $this->entity->offsetSet('hostname', 'another-domain');
     }
 
     /**
@@ -165,7 +209,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         /* @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
          */
-        $this->entity->domain1;
+        $this->entity->hostname1;
     }
 
     /**
@@ -176,7 +220,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSet()
     {
         $this->setExpectedException('LogicException');
-        $this->entity['domain'] = 'another-domain';
+        $this->entity['hostname'] = 'another-domain';
     }
 
     /**
@@ -197,6 +241,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testOffsetUnset()
     {
         $this->setExpectedException('LogicException');
-        unset($this->entity['domain']);
+        unset($this->entity['hostname']);
     }
 }

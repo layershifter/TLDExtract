@@ -115,7 +115,7 @@ class Result implements \ArrayAccess, ResultInterface
         // Case 2: Domain with suffix, but without subdomain.
 
         if (null === $this->subdomain) {
-            return $this->hostname . '.' . $this->subdomain;
+            return $this->hostname . '.' . $this->suffix;
         }
 
         // Case 3: Domain with suffix & subdomain.
