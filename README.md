@@ -1,113 +1,162 @@
 # TLDExtract
 
-[![Latest Stable Version](https://poser.pugx.org/layershifter/tld-extract/v/stable)](https://packagist.org/packages/layershifter/tld-extract)
-[![Build Status](https://travis-ci.org/layershifter/TLDExtract.svg?branch=master)](https://travis-ci.org/layershifter/TLDExtract)
-[![Total Downloads](https://poser.pugx.org/layershifter/tld-extract/downloads)](https://packagist.org/packages/layershifter/tld-extract)
+`TLDExtract` accurately separates the gTLD or ccTLD (generic or country code top-level domain) from the registered domain and subdomains of a URL, e.g. domain parser. For example, say you want just the 'google' part of 'http://www.google.com'.
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/layershifter/TLDExtract/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/layershifter/TLDExtract/?branch=master)
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Software License][ico-license]](LICENSE.md)
+[![Build Status][ico-travis]][link-travis]
+[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
+[![Quality Score][ico-code-quality]][link-code-quality]
+[![Total Downloads][ico-downloads]][link-downloads]
+[![PHP 7 ready](icon-php7ready)][link-travis]
 
-`TLDExtract` accurately separates the gTLD or ccTLD (generic or country code
-top-level domain) from the registered domain and subdomains of a URL. For
-example, say you want just the 'google' part of 'http://www.google.com'.
+---
 
-*Everybody gets this wrong.* Splitting on the '.' and taking the last 2
-elements goes a long way only if you're thinking of simple e.g. .com
-domains. Think parsing
-[http://forums.bbc.co.uk](http://forums.bbc.co.uk) for example: the naive
-splitting method above will give you 'co' as the domain and 'uk' as the TLD,
-instead of 'bbc' and 'co.uk' respectively.
+*Everybody gets this wrong.* Splitting on the '.' and taking the last 2 elements goes a long way only if you're thinking of simple e.g. .com domains. Think parsing [http://forums.bbc.co.uk](http://forums.bbc.co.uk) for example: the naive splitting method above will give you 'co' as the domain and 'uk' as the TLD, instead of 'bbc' and 'co.uk' respectively.
 
-`Extract` on the other hand knows what all gTLDs and ccTLDs look like by
-looking up the currently living ones according to
-[the Public Suffix List](http://www.publicsuffix.org). So,
-given a URL, it knows its subdomain from its domain, and its domain from its
-country code.
+`TLDExtract` on the other hand knows what all gTLDs and ccTLDs look like by looking up the currently living ones according to [the Public Suffix List](http://www.publicsuffix.org). So, given a URL, it knows its subdomain from its domain, and its domain from its country code.
 
-    $result = Extract::get('http://forums.news.cnn.com/');
-    var_dump($result);
+```php
+$extract = new LayerShifter\TLDExtract\Extract();
+$result = $extract->parse('http://forums.news.cnn.com/');
+var_dump($result);
     
-    object(LayerShifter\TLDExtract\Result)#34 (3) {
-      ["subdomain":"LayerShifter\TLDExtract\Result":private]=>
-      string(11) "forums.news"
-      ["domain":"LayerShifter\TLDExtract\Result":private]=>
-      string(3) "cnn"
-      ["tld":"LayerShifter\TLDExtract\Result":private]=>
-      string(3) "com"
-    }
-
+object(LayerShifter\TLDExtract\Result)#34 (3) {
+  ["subdomain":"LayerShifter\TLDExtract\Result":private]=>
+  string(11) "forums.news"
+  ["hostname":"LayerShifter\TLDExtract\Result":private]=>
+  string(3) "cnn"
+  ["suffix":"LayerShifter\TLDExtract\Result":private]=>
+  string(3) "com"
+}
+```
 `Result` implements ArrayAccess interface, so you simple can access to its result.
-
-    var_dump($result['subdomain']);
-    string(11) "forums.news"
+```php
+var_dump($result['subdomain']);
+string(11) "forums.news"
     
-    var_dump($result['domain']);
-    string(3) "cnn"
+var_dump($result['domain']);
+string(3) "cnn"
     
-    var_dump($result['tld']);
-    string(3) "com"
-    
+var_dump($result['tld']);
+string(3) "com"
+```
 Also you can simply convert result to JSON.
-    
-    var_dump($result->toJson());
-    string(54) "{"subdomain":"forums.news","domain":"cnn","tld":"com"}"
+```php
+var_dump($result->toJson());
+string(54) "{"subdomain":"forums.news","domain":"cnn","tld":"com"}"
+```
+This package is compliant with [PSR-1][], [PSR-2][], [PSR-4][]. If you notice compliance oversights, please send a patch via pull request.
 
-This package based on code from [w-shadow](http://w-shadow.com/blog/2012/08/28/tldextract/)
-which is port of [Python module](https://github.com/john-kurkowski/tldextract).
+### Does TLDExtract make requests to Public Suffix List website?
 
-## Compatible PHP versions
-- PHP 5.5
-- PHP 5.6
-- PHP 7
-- HHVM
+No. `TLDExtract` uses database from [TLDDatabase](https://github.com/layershifter/TLDDatabase) that generated from Public Suffix List and updated regularly. It does not make any HTTP requests to parse or validate a domain.
 
-## Installation
+## Requirements
 
-Latest release via Composer:
+The following versions of PHP are supported.
 
-    $ composer require layershifter/tld-extract
+* PHP 5.5
+* PHP 5.6
+* PHP 7.0
+* HHVM
 
-## Note About Advanced Usage & Caching
+## Install
 
-- [Advanced usage](#note-advanced)
-- [Caching](#note-caching)
+Via Composer
 
-### <a name="note-advanced"></a> Advanced usage
+``` bash
+$ composer require layershifter/tld-extract
+```
+## Additional result methods
 
-For overriding object that will be returned in result you can create own class that implements `\LayerShifter\TLDExtract\Interfaces\ResultInterface`.
+Class `LayerShifter\TLDExtract\Result` has some usable methods:
+```php
+$extract = new LayerShifter\TLDExtract\Extract();
 
-For example:
+# For domain 'shop.github.com'
 
-    class OwnResult implements \LayerShifter\TLDExtract\Interfaces\ResultInterface {
-    }
-    
-    Extract::setResultClass('OwnResult');
+$result = $extract->parse('shop.github.com');
+$result->getFullHost(); // will return (string) 'shop.github.com'
+$result->getRegistrableDomain(); // will return (string) 'github.com'
+$result->isValidDomain(); // will return (bool) true
+$result->isIp(); // will return (bool) false
 
-### <a name="note-caching"></a> Caching
+# For IP '192.168.0.1'
 
-By default `TLDExtract` downloads TLD list from publicsuffix.org, caches it and never update.
+$result = $extract->parse('192.168.0.1');
+$result->getFullHost(); // will return (string) '192.168.0.1'
+$result->getRegistrableDomain(); // will return null
+$result->isValidDomain(); // will return (bool) false
+$result->isIp(); // will return (bool) true
+```
+## Custom database
 
-You can override this behavior via setting $fetch to `true`:
+By default package is using database from [TLDDatabase](https://github.com/layershifter/TLDDatabase) package, but you can override this behaviour simply:
+```php
+new LayerShifter\TLDExtract\Extract(__DIR__ . '/cache/mydatabase.php');
+```
+For more details and how keep database updated [TLDDatabase](https://github.com/layershifter/TLDDatabase).
 
-    Extract::setFetch(true);
+## Implement own result
 
----
+By default after parse you will receive object of `LayerShifter\TLDExtract\Result` class, but sometime you need own methods or additional functionality.
 
-Also, you can manually update TLD cache by calling method (recommended):
+You can create own class that implements `LayerShifter\TLDExtract\ResultInterface` and use it as parse result.
+```php
+class CustomResult implements LayerShifter\TLDExtract\ResultInterface {}
 
-    Extract::updateCache();
-    
-This method returns boolean that indicates processes result.
+new LayerShifter\TLDExtract\Extract(null, CustomResult::class);
+```
 
----
+## Parsing modes
 
-By default cache file will be stored in `/path/to/TLDExtract/cache/.tld_set`, you can set file for cache by calling:
+Package has three modes of parsing:
+* allow ICCAN suffixes (domains are those delegated by ICANN or part of the IANA root zone database);
+* allow private domains (domains are amendments submitted to Public Suffix List by the domain holder, as an expression of how they operate their domain security policy);
+* allow custom (domains that are not in list, but can be usable, for example: example, mycompany, etc).
 
-    Extract::setCacheFile('/path/to/your/dir/cache.file');
+For keeping compatibility with Public Suffix List ideas package runs in all these modes by default, but you can easily change this behavior:
+```php
+use LayerShifter\TLDExtract\Extract;
 
-License
--------
+new Extract(null, null, Extract::MODE_ALLOW_ICCAN);
+new Extract(null, null, Extract::MODE_ALLOW_PRIVATE);
+new Extract(null, null, Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
+new Extract(null, null, Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE);
+```
 
-This project is open-sourced software licensed under the MIT License.
+## Change log
 
-See the LICENSE file for more information.
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
+## Testing
+``` bash
+$ composer test
+```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
+
+## License
+
+This library is released under the Apache 2.0 license. Please see [License File](LICENSE) for more information.
+
+[PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
+[PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
+[PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
+
+[ico-version]: https://img.shields.io/packagist/v/layershifter/TLDExtract.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/layershifter/TLDExtract/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/layershifter/TLDExtract.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/layershifter/TLDExtract.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/layershifter/TLDExtract.svg?style=flat-square
+[ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
+
+[link-packagist]: https://packagist.org/packages/layershifter/TLDExtract
+[link-travis]: https://travis-ci.org/layershifter/TLDExtract
+[link-scrutinizer]: https://scrutinizer-ci.com/g/layershifter/TLDExtract/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/layershifter/TLDExtract
+[link-downloads]: https://packagist.org/packages/layershifter/TLDExtract

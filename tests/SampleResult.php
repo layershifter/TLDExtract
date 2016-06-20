@@ -8,12 +8,11 @@
  * @license   https://raw.githubusercontent.com/layershifter/TLDExtract/master/LICENSE Apache 2.0 License
  */
 
-namespace LayerShifter\TLDExtract\Exceptions;
+namespace LayerShifter\TLDExtract\Tests;
 
-/**
- * Base exception.
- */
-class Exception extends \Exception
+use LayerShifter\TLDExtract\Result;
+
+class SampleResult extends Result
 {
 
 }

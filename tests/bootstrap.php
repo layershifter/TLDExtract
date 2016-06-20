@@ -8,12 +8,4 @@
  * @license   https://raw.githubusercontent.com/layershifter/TLDExtract/master/LICENSE Apache 2.0 License
  */
 
-namespace LayerShifter\TLDExtract\Exceptions;
-
-/**
- * Base exception.
- */
-class Exception extends \Exception
-{
-
-}
+include_once __DIR__ . '/../vendor/autoload.php';

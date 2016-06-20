@@ -11,6 +11,7 @@
  */
 namespace LayerShifter\TLDExtract\Tests;
 
+use LayerShifter\TLDExtract\Extract;
 use LayerShifter\TLDExtract\Result;
 
 /**
@@ -42,27 +43,59 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        self::assertNull($this->entity->subdomain);
-        self::assertEquals('192.168.0.1', $this->entity->domain);
-        self::assertNull($this->entity->tld);
+        static::assertNull($this->entity->subdomain);
+        static::assertEquals('192.168.0.1', $this->entity->hostname);
+        static::assertNull($this->entity->suffix);
 
         $entity = new Result(null, 'domain', 'com');
 
-        self::assertNull($this->entity->subdomain);
-        self::assertEquals('domain', $entity->domain);
-        self::assertEquals('com', $entity->tld);
+        static::assertNull($this->entity->subdomain);
+        static::assertEquals('domain', $entity->hostname);
+        static::assertEquals('com', $entity->suffix);
 
         unset($entity);
 
         $entity = new Result('www', 'domain', 'com');
 
-        self::assertEquals('www', $entity->subdomain);
-        self::assertEquals('domain', $entity->domain);
-        self::assertEquals('com', $entity->tld);
+        static::assertEquals('www', $entity->subdomain);
+        static::assertEquals('domain', $entity->hostname);
+        static::assertEquals('com', $entity->suffix);
 
-        self::assertArrayHasKey('subdomain', $entity);
-        self::assertArrayHasKey('domain', $entity);
-        self::assertArrayHasKey('tld', $entity);
+        static::assertArrayHasKey('subdomain', $entity);
+        static::assertArrayHasKey('hostname', $entity);
+        static::assertArrayHasKey('suffix', $entity);
+    }
+
+    /**
+     * Test domain entry.
+     *
+     * @return void
+     */
+    public function testDomain()
+    {
+        $extract = new Extract();
+        $result = $extract->parse('shop.github.com');
+
+        static::assertEquals('shop.github.com', $result->getFullHost());
+        static::assertEquals('github.com', $result->getRegistrableDomain());
+        static::assertTrue($result->isValidDomain());
+        static::assertFalse($result->isIp());
+    }
+
+    /**
+     * Test IP entry.
+     *
+     * @return void
+     */
+    public function testIp()
+    {
+        $extract = new Extract();
+        $result = $extract->parse('192.168.0.1');
+
+        static::assertEquals('192.168.0.1', $result->getFullHost());
+        static::assertNull($result->getRegistrableDomain());
+        static::assertFalse($result->isValidDomain());
+        static::assertTrue($result->isIp());
     }
 
     /**
@@ -72,11 +105,11 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testToJson()
     {
-        self::assertJsonStringEqualsJsonString(
-            json_encode((object) [
+        static::assertJsonStringEqualsJsonString(
+            json_encode((object)[
                 'subdomain' => null,
-                'domain'    => '192.168.0.1',
-                'tld'       => null,
+                'hostname'  => '192.168.0.1',
+                'suffix'    => null,
             ]),
             $this->entity->toJson()
         );
@@ -89,7 +122,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        self::assertEquals('192.168.0.1', (string) $this->entity);
+        static::assertEquals('192.168.0.1', (string)$this->entity);
     }
 
     /**
@@ -99,14 +132,14 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsset()
     {
-        self::assertEquals(true, $this->entity->subdomain === null);
-        self::assertEquals(true, $this->entity->domain !== null);
-        self::assertEquals(true, $this->entity->tld === null);
+        static::assertNull($this->entity->subdomain);
+        static::assertNotNull($this->entity->hostname);
+        static::assertNull($this->entity->suffix);
 
         /* @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
          */
-        self::assertEquals(false, isset($this->entity->test));
+        static::assertEquals(false, isset($this->entity->test));
     }
 
     /**
@@ -116,8 +149,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testSet()
     {
-        self::setExpectedException('LogicException');
-
+        $this->setExpectedException('LogicException');
         $this->entity->offsetSet('domain', 'another-domain');
     }
 
@@ -128,7 +160,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        self::setExpectedException('OutOfRangeException');
+        $this->setExpectedException('OutOfRangeException');
 
         /* @noinspection PhpUndefinedFieldInspection
          * Test for not existing field
@@ -143,8 +175,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetSet()
     {
-        self::setExpectedException('LogicException');
-
+        $this->setExpectedException('LogicException');
         $this->entity['domain'] = 'another-domain';
     }
 
@@ -155,7 +186,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetGet()
     {
-        self::assertEquals('192.168.0.1', $this->entity['domain']);
+        static::assertEquals('192.168.0.1', $this->entity['hostname']);
     }
 
     /**
@@ -165,8 +196,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testOffsetUnset()
     {
-        self::setExpectedException('LogicException');
-
+        $this->setExpectedException('LogicException');
         unset($this->entity['domain']);
     }
 }

@@ -1,246 +1,316 @@
 <?php
 /**
- * PHP version 5.
+ * TLDExtract: Library for extraction of domain parts e.g. TLD. Domain parser that uses Public Suffix List.
  *
- * @category Classes
+ * @link      https://github.com/layershifter/TLDExtract
  *
- * @author   Alexander Fedyashov <a@fedyashov.com>
- * @author   W-Shadow <whiteshadow@w-shadow.com>
- * @license  MIT https://opensource.org/licenses/MIT
- *
- * @link     https://github.com/layershifter/TLDExtract
+ * @copyright Copyright (c) 2016, Alexander Fedyashov
+ * @license   https://raw.githubusercontent.com/layershifter/TLDExtract/master/LICENSE Apache 2.0 License
  */
+
 namespace LayerShifter\TLDExtract;
 
-use LayerShifter\TLDExtract\Exceptions\IOException;
-use LayerShifter\TLDExtract\Exceptions\ListException;
+use LayerShifter\TLDDatabase\Store;
+use LayerShifter\TLDExtract\Exceptions\RuntimeException;
+use LayerShifter\TLDSupport\Helpers\Arr;
+use LayerShifter\TLDSupport\Helpers\IP;
+use LayerShifter\TLDSupport\Helpers\Str;
 
 /**
- * TLDExtract accurately extracts subdomain, domain and TLD components from URLs.
+ * Extract class accurately extracts subdomain, domain and TLD components from URLs.
  *
  * @see Result for more information on the returned data structure.
  */
 class Extract
 {
-    /**
-     * If $fetch is TRUE and no cached TLD set is found, the extractor will fetch the Public Suffix List live over
-     * HTTP on first use.
-     *
-     * Set to FALSE to disable this behaviour.
-     *
-     * @var bool
-     */
-    private static $fetch = false;
-    /**
-     * Specifying $cacheFile will override the location of the cached TLD set.
-     * Defaults to /path/to/TLDExtract/cache/.tld_set.
-     *
-     * @var string
-     */
-    private static $cacheFile;
 
     /**
-     * Specifying $suffixFileUrl will override the URL from suffix list will be loaded.
-     *
-     * @var string
+     * @const int If this option provided, extract will consider ICCAN suffixes.
      */
-    private static $suffixFileUrl = 'https://publicsuffix.org/list/effective_tld_names.dat';
+    const MODE_ALLOW_ICCAN = 2;
+    /**
+     * @const int If this option provided, extract will consider private suffixes.
+     */
+    const MODE_ALLOW_PRIVATE = 4;
+    /**
+     * @const int If this option provided, extract will consider custom domains.
+     */
+    const MODE_ALLOW_NOT_EXISTING_SUFFIXES = 8;
+    /**
+     * @const string RFC 3986 compliant scheme regex pattern.
+     *
+     * @see   https://tools.ietf.org/html/rfc3986#section-3.1
+     */
+    const SCHEMA_PATTERN = '#^([a-zA-Z][a-zA-Z0-9+\-.]*:)?//#';
 
     /**
-     * Specifying $resultClass will override object of result's class.
-     *
-     * @var string
+     * @var int Value of extraction options.
      */
-    private static $resultClass = '\\LayerShifter\\TLDExtract\\Result';
+    private $extractionMode;
+    /**
+     * @var string Name of class that will store results of parsing.
+     */
+    private $resultClassName;
+    /**
+     * @var Store Object of TLDDatabase\Store class.
+     */
+    private $suffixStore;
 
     /**
-     * Sets $resultClass param.
+     * Factory constructor.
      *
-     * @param string $resultClass
+     * @param null|string $databaseFile    Optional, name of file with Public Suffix List database
+     * @param null|string $resultClassName Optional, name of class that will store results of parsing
+     * @param null|int    $extractionMode  Optional, options that will control extraction process
      *
-     * @throws \RuntimeException
-     *
-     * @return void
+     * @throws RuntimeException
      */
-    public static function setResultClass($resultClass)
+    public function __construct($databaseFile = null, $resultClassName = null, $extractionMode = null)
     {
-        if (!class_exists($resultClass)) {
-            throw new \RuntimeException(sprintf('Class %s not exists', $resultClass));
+        $this->suffixStore = new Store($databaseFile);
+        $this->resultClassName = Result::class;
+
+        // Checks for resultClassName argument.
+
+        if (null !== $resultClassName) {
+            if (!class_exists($resultClassName)) {
+                throw new RuntimeException(sprintf('Class "%s" is not defined', $resultClassName));
+            }
+
+            if (!in_array(ResultInterface::class, class_implements($resultClassName), true)) {
+                throw new RuntimeException(sprintf('Class "%s" not implements ResultInterface', $resultClassName));
+            }
+
+            $this->resultClassName = $resultClassName;
         }
 
-        self::$resultClass = $resultClass;
-    }
+        // Checks for extractionMode argument.
 
-    /**
-     * Gets states of $fetch.
-     *
-     * @return bool
-     */
-    public static function isFetch()
-    {
-        return self::$fetch;
-    }
+        if (null === $extractionMode) {
+            $this->extractionMode = static::MODE_ALLOW_ICCAN
+                | static::MODE_ALLOW_PRIVATE
+                | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES;
 
-    /**
-     * Sets $fetch param.
-     *
-     * @param bool $fetch
-     *
-     * @return void
-     */
-    public static function setFetch($fetch)
-    {
-        self::$fetch = $fetch;
-    }
-
-    /**
-     * Gets cache filename.
-     *
-     * @return string
-     */
-    public static function getCacheFile()
-    {
-        return self::$cacheFile;
-    }
-
-    /**
-     * Sets cache filename.
-     *
-     * @param string $cacheFile Filename where cache will be stored
-     *
-     * @return void
-     */
-    public static function setCacheFile($cacheFile)
-    {
-        self::$cacheFile = $cacheFile;
-    }
-
-    /**
-     * Gets URL of suffix list.
-     *
-     * @return string
-     */
-    public static function getSuffixFileUrl()
-    {
-        return self::$suffixFileUrl;
-    }
-
-    /**
-     * Sets URL of suffix list.
-     *
-     * @param string $suffixFileUrl URL where stored valid suffix list
-     *
-     * @return Extract
-     */
-    public static function setSuffixFileUrl($suffixFileUrl)
-    {
-        self::$suffixFileUrl = $suffixFileUrl;
-    }
-
-    /**
-     * Extract the subdomain, domain, and gTLD/ccTLD components from a URL.
-     *
-     * @param string $url URL that will be extracted
-     *
-     * @throws IOException
-     * @throws ListException
-     * @throws \RuntimeException
-     *
-     * @return Result
-     */
-    public static function get($url)
-    {
-        if (self::$cacheFile === null) {
-            self::$cacheFile = __DIR__ . '/../cache/.tld_set';
+            return;
         }
 
-        $host = self::getHost($url);
-        $extractor = SuffixExtractor::getInstance();
-
-        list($domain, $tld) = $extractor->extract($host);
-
-        // Check for IPv4 and IPv6 addresses.
-
-        if ($tld === null && Helpers::isIp($host)) {
-            return new self::$resultClass(null, $host, null);
+        if (!is_int($extractionMode)) {
+            throw new RuntimeException('Invalid argument type, extractionMode must be integer');
         }
 
-        $lastDot = strrpos($domain, '.');
-
-        // If $lastDot not FALSE, there is subdomain in domain
-
-        if ($lastDot !== false) {
-            return new self::$resultClass(
-                substr($domain, 0, $lastDot),
-                substr($domain, $lastDot + 1),
-                $tld
+        if (!in_array($extractionMode, [
+            static::MODE_ALLOW_ICCAN,
+            static::MODE_ALLOW_PRIVATE,
+            static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_PRIVATE,
+            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES
+        ], true)
+        ) {
+            throw new RuntimeException(
+                'Invalid argument type, extractionMode must be one of defined constants of their combination'
             );
         }
 
-        return new self::$resultClass(null, $domain, $tld);
+        $this->extractionMode = $extractionMode;
     }
 
     /**
-     * Method for manually updating of TLD list's cache.
+     * Extract the subdomain, host and gTLD/ccTLD components from a URL.
      *
-     * @throws IOException
-     * @throws ListException
-     * @throws \RuntimeException
+     * @param string $url URL that will be extracted
+     *
+     * @return ResultInterface
+     */
+    public function parse($url)
+    {
+        $hostname = $this->extractHostname($url);
+
+        // If received hostname is valid IP address, result will be formed from it.
+
+        if (IP::isValid($hostname)) {
+            return new $this->resultClassName(null, $hostname, null);
+        }
+
+        list($subDomain, $host, $suffix) = $this->extractParts($hostname);
+
+        return new $this->resultClassName($subDomain, $host, $suffix);
+    }
+
+    /**
+     * Method that extracts the hostname or IP address from a URL.
+     *
+     * @param string $url URL for extraction
+     *
+     * @return null|string Hostname or IP address
+     */
+    private function extractHostname($url)
+    {
+        $url = trim(Str::lower($url));
+
+        // Removes scheme and path i.e. http://github.com to github.com.
+
+        $parts = explode('/', preg_replace(static::SCHEMA_PATTERN, '', $url), 2);
+        $hostname = Arr::first($parts);
+
+        // Removes username from URL i.e. user@github.com to github.com.
+
+        $hostname = Arr::last(explode('@', $hostname));
+
+        // Remove ports from hosts, also check for IPv6 literals like "[3ffe:2a00:100:7031::1]".
+        //
+        // @see http://www.ietf.org/rfc/rfc2732.txt
+
+        $lastBracketPosition = Str::strrpos($hostname, ']');
+
+        if ($lastBracketPosition !== false && Str::startsWith($hostname, '[')) {
+            return Str::substr($hostname, 1, $lastBracketPosition - 1);
+        }
+
+        // This is either a normal hostname or an IPv4 address, just remove the port.
+
+        $hostname = Arr::first(explode(':', $hostname));
+
+        // If string is empty, null will be returned.
+
+        return '' === $hostname ? null : $hostname;
+    }
+
+    /**
+     * Extracts subdomain, host and suffix from input string. Based on algorithm described in
+     * https://publicsuffix.org/list/.
+     *
+     * @param string $hostname Hostname for extraction
+     *
+     * @return array|string[] An array that contains subdomain, host and suffix.
+     */
+    public function extractParts($hostname)
+    {
+        $suffix = $this->extractSuffix($hostname);
+
+        if ($suffix === $hostname) {
+            return [null, $hostname, null];
+        }
+
+        if (null !== $suffix) {
+            $hostname = Str::substr($hostname, 0, -Str::length($suffix) - 1);
+        }
+
+        $lastDot = Str::strrpos($hostname, '.');
+
+        if (false === $lastDot) {
+            return [null, $hostname, $suffix];
+        }
+
+        $subDomain = Str::substr($hostname, 0, $lastDot);
+        $host = Str::substr($hostname, $lastDot + 1);
+
+        return [
+            $subDomain,
+            $host,
+            $suffix
+        ];
+    }
+
+    /**
+     * Extracts suffix from hostname using Public Suffix List database.
+     *
+     * @param string $hostname Hostname for extraction
+     *
+     * @return null|string
+     */
+    private function extractSuffix($hostname)
+    {
+        // If hostname has leading dot, it's invalid.
+        // If hostname is a single label domain makes, it's invalid.
+
+        if (Str::startsWith($hostname, '.') || Str::strpos($hostname, '.') === false) {
+            return null;
+        }
+
+        // If domain is in punycode, it will be converted to IDN.
+
+        $isPunycoded = Str::strpos($hostname, 'xn--') !== false;
+
+        if ($isPunycoded) {
+            $hostname = idn_to_utf8($hostname);
+        }
+
+        $suffix = $this->parseSuffix($hostname);
+
+        if (null === $suffix) {
+            if (!($this->extractionMode & static::MODE_ALLOW_NOT_EXISTING_SUFFIXES)) {
+                return null;
+            }
+
+            $suffix = Str::substr($hostname, Str::strrpos($hostname, '.') + 1);
+        }
+
+        // If domain is punycoded, suffix will be converted to punycode.
+
+        return $isPunycoded ? idn_to_ascii($suffix) : $suffix;
+    }
+
+    /**
+     * Extracts suffix from hostname using Public Suffix List database.
+     *
+     * @param string $hostname Hostname for extraction
+     *
+     * @return null|string
+     */
+    private function parseSuffix($hostname)
+    {
+        $hostnameParts = explode('.', $hostname);
+        $realSuffix = null;
+
+        for ($i = 0, $count = count($hostnameParts); $i < $count; $i++) {
+            $possibleSuffix = implode('.', array_slice($hostnameParts, $i));
+            $exceptionSuffix = '!' . $possibleSuffix;
+
+            if ($this->suffixExists($exceptionSuffix)) {
+                $realSuffix = implode('.', array_slice($hostnameParts, $i + 1));
+
+                break;
+            }
+
+            if ($this->suffixExists($possibleSuffix)) {
+                $realSuffix = $possibleSuffix;
+
+                break;
+            }
+
+            $wildcardTld = '*.' . implode('.', array_slice($hostnameParts, $i + 1));
+
+            if ($this->suffixExists($wildcardTld)) {
+                $realSuffix = $possibleSuffix;
+
+                break;
+            }
+        }
+
+        return $realSuffix;
+    }
+
+    /**
+     * Method that checks existence of entry in Public Suffix List database, including provided options.
+     *
+     * @param string $entry Entry for check in Public Suffix List database
      *
      * @return bool
      */
-    public static function updateCache()
+    private function suffixExists($entry)
     {
-        $extractor = SuffixExtractor::getInstance();
-
-        return $extractor->fetchTldList();
-    }
-
-    /**
-     * Extract the hostname from a URL.
-     *
-     * @param string $url Extracts host from URL
-     *
-     * @return string
-     */
-    private static function getHost($url)
-    {
-        /*
-         * Removes scheme and path
-         * i.e. http://github.com to github.com
-         * */
-        $parts = explode('/', preg_replace('#^([a-zA-Z][a-zA-Z0-9+\-.]*:)?//#', '', $url), 2);
-        $host = reset($parts);
-
-        /*
-         * Removes username from URL
-         * i.e. user@github.com to github.com
-         * */
-        if (($position = strpos($host, '@')) !== false) {
-            $host = substr($host, $position + 1);
+        if (!$this->suffixStore->isExists($entry)) {
+            return false;
         }
 
-        /*
-         * Remove ports from hosts, also check for IPv6 literals like
-         * "[3ffe:2a00:100:7031::1]"
-         *
-         * @see http://www.ietf.org/rfc/rfc2732.txt
-         * */
-        $bracketPosition = strrpos($host, ']');
+        $type = $this->suffixStore->getType($entry);
 
-        if ($bracketPosition !== false && Helpers::startsWith($host, '[')) {
-            // This is IPv6 literal
-
-            return substr($host, 0, $bracketPosition + 1);
+        if ($this->extractionMode & static::MODE_ALLOW_ICCAN && $type === Store::TYPE_ICCAN) {
+            return true;
         }
 
-        /*
-         * This is either a normal hostname or an IPv4 address
-         * Just remove the port.
-         * */
-
-        $parts = explode(':', $host);
-
-        return reset($parts);
+        return $this->extractionMode & static::MODE_ALLOW_PRIVATE && $type === Store::TYPE_PRIVATE;
     }
 }

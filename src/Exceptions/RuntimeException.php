@@ -11,9 +11,8 @@
 namespace LayerShifter\TLDExtract\Exceptions;
 
 /**
- * Base exception.
+ * Exception for runtime errors.
  */
-class Exception extends \Exception
+class RuntimeException extends Exception
 {
-
 }
