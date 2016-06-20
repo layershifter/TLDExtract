@@ -6,22 +6,34 @@ php:
   - 7.0
   - hhvm
 
-install:
-  - composer self-update
-  - composer --prefer-source install
+# This triggers builds to run on the new TravisCI infrastructure.
+# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: false
 
-notifications:
-  email: false
+## Cache composer
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+matrix:
+  include:
+    - php: 5.5
+      env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+
+before_script:
+  - mkdir -p build/logs
+  - travis_retry composer self-update
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
 
 env:
   global:
     - CODECLIMATE_REPO_TOKEN=7396381ced84304988d8d21526e4b626ac3ab455415d4f0a1154da9609d8cdbb
 
-before_script:
-  - mkdir -p build/logs
-
 script:
-  - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
+  - vendor/bin/phpcs --standard=psr2 src/
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+  - vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
 
 after_script:
-  - ./vendor/bin/test-reporter --coverage-report ./build/logs/clover.xml
+  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != '7.0' ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi
+  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != '7.0' ]]; then php vendor/bin/test-reporter --coverage-report ./build/logs/clover.xml; fi

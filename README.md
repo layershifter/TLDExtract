@@ -2,8 +2,13 @@
 
 `TLDExtract` accurately separates the gTLD or ccTLD (generic or country code top-level domain) from the registered domain and subdomains of a URL, e.g. domain parser. For example, say you want just the 'google' part of 'http://www.google.com'.
 
-[![Latest Stable Version](https://poser.pugx.org/layershifter/tld-extract/v/stable)](https://packagist.org/packages/layershifter/tld-extract) [![Total Downloads](https://poser.pugx.org/layershifter/tld-extract/downloads)](https://packagist.org/packages/layershifter/tld-extract) [![PHP 7 ready](http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg)](https://travis-ci.org/layershifter/TLDExtract)
-[![Build Status](https://travis-ci.org/layershifter/TLDExtract.svg)](https://travis-ci.org/layershifter/TLDExtract) [![Code Climate](https://codeclimate.com/github/layershifter/TLDExtract/badges/gpa.svg)](https://codeclimate.com/github/layershifter/TLDExtract) [![Test Coverage](https://codeclimate.com/github/layershifter/TLDExtract/badges/coverage.svg)](https://codeclimate.com/github/layershifter/TLDExtract/coverage)
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Software License][ico-license]](LICENSE.md)
+[![Build Status][ico-travis]][link-travis]
+[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
+[![Quality Score][ico-code-quality]][link-code-quality]
+[![Total Downloads][ico-downloads]][link-downloads]
+[![PHP 7 ready](icon-php7ready)][link-travis]
 
 ---
 
@@ -121,6 +126,19 @@ new Extract(null, null, Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
 new Extract(null, null, Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE);
 ```
 
+## Change log
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
+## Testing
+``` bash
+$ composer test
+```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
+
 ## License
 
 This library is released under the Apache 2.0 license. Please see [License File](LICENSE) for more information.
@@ -128,3 +146,17 @@ This library is released under the Apache 2.0 license. Please see [License File]
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
+
+[ico-version]: https://img.shields.io/packagist/v/layershifter/TLDExtract.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/layershifter/TLDExtract/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/layershifter/TLDExtract.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/layershifter/TLDExtract.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/layershifter/TLDExtract.svg?style=flat-square
+[ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
+
+[link-packagist]: https://packagist.org/packages/layershifter/TLDExtract
+[link-travis]: https://travis-ci.org/layershifter/TLDExtract
+[link-scrutinizer]: https://scrutinizer-ci.com/g/layershifter/TLDExtract/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/layershifter/TLDExtract
+[link-downloads]: https://packagist.org/packages/layershifter/TLDExtract
