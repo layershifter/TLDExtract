@@ -15,15 +15,10 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-matrix:
-  include:
-    - php: 5.5
-      env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
-
 before_script:
   - mkdir -p build/logs
   - travis_retry composer self-update
-  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
+  - travis_retry composer update --no-interaction --prefer-dist
 
 env:
   global:
