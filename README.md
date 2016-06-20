@@ -8,8 +8,9 @@
 [![Coverage Status][ico-coverage]][link-coverage]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![PHP 7 ready](ico-php7ready)][link-travis]
-[![SensioLabsInsight](ico-sensio)](link-sensio)
+[![PHP 7 ready][ico-php7ready]][link-travis]
+
+[![SensioLabsInsight][ico-sensio]][link-sensio]
 
 ---
 
