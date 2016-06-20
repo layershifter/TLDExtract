@@ -36,17 +36,15 @@ object(LayerShifter\TLDExtract\Result)#34 (3) {
 ```php
 var_dump($result['subdomain']);
 string(11) "forums.news"
-    
-var_dump($result['domain']);
+var_dump($result['hostname']);
 string(3) "cnn"
-    
-var_dump($result['tld']);
+var_dump($result['suffix']);
 string(3) "com"
 ```
 Also you can simply convert result to JSON.
 ```php
 var_dump($result->toJson());
-string(54) "{"subdomain":"forums.news","domain":"cnn","tld":"com"}"
+string(54) "{"subdomain":"forums.news","hostname":"cnn","suffix":"com"}"
 ```
 This package is compliant with [PSR-1][], [PSR-2][], [PSR-4][]. If you notice compliance oversights, please send a patch via pull request.
 
