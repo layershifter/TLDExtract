@@ -28,6 +28,9 @@
     "squizlabs/php_codesniffer": "2.*"
   },
   "autoload": {
+    "files": [
+      "src/static.php"
+    ],
     "psr-4": {
       "LayerShifter\\TLDExtract\\": "src/"
     }

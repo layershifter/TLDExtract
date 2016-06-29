@@ -19,8 +19,7 @@
 `TLDExtract` on the other hand knows what all gTLDs and ccTLDs look like by looking up the currently living ones according to [the Public Suffix List](http://www.publicsuffix.org). So, given a URL, it knows its subdomain from its domain, and its domain from its country code.
 
 ```php
-$extract = new LayerShifter\TLDExtract\Extract();
-$result = $extract->parse('http://forums.news.cnn.com/');
+$result = tld_extract('http://forums.news.cnn.com/');
 var_dump($result);
     
 object(LayerShifter\TLDExtract\Result)#34 (3) {
