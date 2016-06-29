@@ -198,6 +198,17 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test for magic method __set().
+     *
+     * @return void
+     */
+    public function testSetViaProperty()
+    {
+        $this->setExpectedException('LogicException');
+        $this->entity->hostname = 'another-domain';
+    }
+
+    /**
      * Test for magic method __get().
      *
      * @return void
