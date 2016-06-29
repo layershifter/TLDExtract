@@ -80,34 +80,6 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
         static::assertAttributeEquals(Extract::MODE_ALLOW_ICCAN, 'extractionMode', $extract);
         static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
-
-        // Variant 5.
-
-        $extract = new Extract(null, null, Extract::MODE_ALLOW_PRIVATE);
-
-        static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(Extract::MODE_ALLOW_PRIVATE, 'extractionMode', $extract);
-        static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
-
-        // Variant 6.
-
-        $extract = new Extract(null, null, Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
-
-        static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES, 'extractionMode', $extract);
-        static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
-
-        // Variant 7.
-
-        $extract = new Extract(null, null, Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
-
-        static::assertAttributeInstanceOf(Store::class, 'suffixStore', $extract);
-        static::assertAttributeEquals(
-            Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
-            'extractionMode',
-            $extract
-        );
-        static::assertAttributeEquals(Result::class, 'resultClassName', $extract);
     }
 
     /**
@@ -133,29 +105,75 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests constructor() exception for invalid mode type.
+     * Tests setExtractionMode() method.
      *
      * @void
      */
-    public function testConstructorInvalidArgumentType()
+    public function testSetExtractionMode()
     {
-        $this->setExpectedException(RuntimeException::class, 'Invalid argument type, extractionMode must be integer');
-        new Extract(null, null, 'a');
+        $extract = new Extract();
+
+        // Variant 1.
+
+        $extract->setExtractionMode(null);
+        static::assertAttributeEquals(
+            Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            'extractionMode',
+            $extract
+        );
+
+        // Variant 2.
+
+        $extract->setExtractionMode(Extract::MODE_ALLOW_ICCAN);
+        static::assertAttributeEquals(Extract::MODE_ALLOW_ICCAN, 'extractionMode', $extract);
+
+        // Variant 3.
+
+        $extract->setExtractionMode(Extract::MODE_ALLOW_PRIVATE);
+        static::assertAttributeEquals(Extract::MODE_ALLOW_PRIVATE, 'extractionMode', $extract);
+
+        // Variant 4.
+
+        $extract->setExtractionMode(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
+        static::assertAttributeEquals(Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES, 'extractionMode', $extract);
+
+        // Variant 5.
+
+        $extract->setExtractionMode(Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
+        static::assertAttributeEquals(
+            Extract::MODE_ALLOW_PRIVATE | Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            'extractionMode',
+            $extract
+        );
     }
 
     /**
-     * Tests constructor() exception for invalid mode value.
+     * Tests setExtractionMode() exception for invalid mode type.
      *
      * @void
      */
-    public function testConstructorInvalidArgumentValue()
+    public function testSetExtractionModeInvalidArgumentType()
+    {
+        $this->setExpectedException(RuntimeException::class, 'Invalid argument type, extractionMode must be integer');
+
+        $extract = new Extract();
+        $extract->setExtractionMode('a');
+    }
+
+    /**
+     * Tests setExtractionMode() exception for invalid mode value.
+     *
+     * @void
+     */
+    public function testSetExtractionModeInvalidArgumentValue()
     {
         $this->setExpectedException(
             RuntimeException::class,
             'Invalid argument type, extractionMode must be one of defined constants'
         );
 
-        new Extract(null, null, -10);
+        $extract = new Extract();
+        $extract->setExtractionMode(-10);
     }
 
     /**

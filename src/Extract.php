@@ -61,7 +61,7 @@ class Extract
      *
      * @param null|string $databaseFile    Optional, name of file with Public Suffix List database
      * @param null|string $resultClassName Optional, name of class that will store results of parsing
-     * @param null|int    $extractionMode  Optional, options that will control extraction process
+     * @param null|int    $extractionMode  Optional, option that will control extraction process
      *
      * @throws RuntimeException
      */
@@ -84,8 +84,18 @@ class Extract
             $this->resultClassName = $resultClassName;
         }
 
-        // Checks for extractionMode argument.
+        $this->setExtractionMode($extractionMode);
+    }
 
+    /**
+     * Sets extraction mode, option that will control extraction process.
+     *
+     * @param int $extractionMode One of MODE_* constants
+     *
+     * @throws RuntimeException
+     */
+    public function setExtractionMode($extractionMode = null)
+    {
         if (null === $extractionMode) {
             $this->extractionMode = static::MODE_ALLOW_ICCAN
                 | static::MODE_ALLOW_PRIVATE
