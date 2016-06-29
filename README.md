@@ -10,8 +10,6 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![PHP 7 ready][ico-php7ready]][link-travis]
 
-[![SensioLabsInsight][ico-sensio]][link-sensio]
-
 ---
 
 *Everybody gets this wrong.* Splitting on the '.' and taking the last 2 elements goes a long way only if you're thinking of simple e.g. .com domains. Think parsing [http://forums.bbc.co.uk](http://forums.bbc.co.uk) for example: the naive splitting method above will give you 'co' as the domain and 'uk' as the TLD, instead of 'bbc' and 'co.uk' respectively.
@@ -153,11 +151,9 @@ This library is released under the Apache 2.0 license. Please see [License File]
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/layershifter/TLDExtract.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/layershifter/tld-extract.svg?style=flat-square
 [ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
-[ico-sensio]: https://insight.sensiolabs.com/projects/d433ad39-60fa-4493-a4ba-7109e71737af/big.png
 
 [link-packagist]: https://packagist.org/packages/layershifter/tld-extract
 [link-travis]: https://travis-ci.org/layershifter/TLDExtract
 [link-coverage]: https://codeclimate.com/github/layershifter/TLDExtract/coverage
 [link-code-quality]: https://scrutinizer-ci.com/g/layershifter/TLDExtract
 [link-downloads]: https://packagist.org/packages/layershifter/tld-extract
-[link-sensio]: https://insight.sensiolabs.com/projects/d433ad39-60fa-4493-a4ba-7109e71737af
