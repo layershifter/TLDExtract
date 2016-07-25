@@ -27,14 +27,14 @@ class StaticTest extends \PHPUnit_Framework_TestCase
     {
         $result = tld_extract('http://www.domain.com');
 
-        static::assertEquals($result->getFullHost(), 'www.domain.com');
-        static::assertEquals($result->getRegistrableDomain(), 'domain.com');
+        static::assertEquals('www.domain.com', $result->getFullHost());
+        static::assertEquals('domain.com', $result->getRegistrableDomain());
 
         $result = tld_extract('a.b.blogspot.com', Extract::MODE_ALLOW_ICCAN);
 
-        static::assertEquals($result->getFullHost(), 'a.b.blogspot.com');
-        static::assertEquals($result->getRegistrableDomain(), 'blogspot.com');
-        static::assertEquals($result->getSubdomain(), 'a.b');
-        static::assertEquals($result->getSuffix(), 'com');
+        static::assertEquals('a.b.blogspot.com', $result->getFullHost());
+        static::assertEquals('blogspot.com', $result->getRegistrableDomain());
+        static::assertEquals('a.b', $result->getSubdomain());
+        static::assertEquals('com', $result->getSuffix());
     }
 }
