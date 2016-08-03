@@ -13,7 +13,7 @@ namespace LayerShifter\TLDExtract\Exceptions;
 /**
  * Base exception.
  */
-class Exception extends \Exception
+abstract class Exception extends \Exception
 {
 
 }
