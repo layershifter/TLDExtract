@@ -159,10 +159,14 @@ class Extract
     {
         $url = trim(Str::lower($url));
 
-        // Removes scheme and path i.e. http://github.com to github.com.
+        // Removes scheme and path i.e. "https://github.com/layershifter" to "github.com/layershifter".
 
-        $parts = explode('/', preg_replace(static::SCHEMA_PATTERN, '', $url), 2);
-        $hostname = Arr::first($parts);
+        $url = preg_replace(static::SCHEMA_PATTERN, '', $url);
+
+        // Removes path and query part of URL i.e. "github.com/layershifter" to "github.com".
+
+        $url = $this->fixQueryPart($url);
+        $hostname = Arr::first(explode('/', $url, 2));
 
         // Removes username from URL i.e. user@github.com to github.com.
 
@@ -322,5 +326,25 @@ class Extract
         }
 
         return $this->extractionMode & static::MODE_ALLOW_PRIVATE && $type === Store::TYPE_PRIVATE;
+    }
+
+    /**
+     * Fixes URL from "github.com?layershifter" to "github.com/?layershifter".
+     *
+     * @see https://github.com/layershifter/TLDExtract/issues/5
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    private function fixQueryPart($url)
+    {
+        $position = Str::strpos($url, '?');
+
+        if ($position === false) {
+            return $url;
+        }
+
+        return Str::substr($url, 0, $position) . '/' . Str::substr($url, $position);
     }
 }

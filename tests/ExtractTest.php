@@ -350,6 +350,8 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         $this->checkPublicSuffix('com', null);
         $this->checkPublicSuffix('http://www.bbc.co.uk/news/business', 'co.uk');
         $this->checkPublicSuffix('http://ru.wikipedia.org/', 'org');
+        $this->checkPublicSuffix('http://example.com/?foo=bar', 'com');
+        $this->checkPublicSuffix('http://example.com?foo=bar', 'com');
         $this->checkPublicSuffix('bcc.bccbcc', 'bccbcc');
         $this->checkPublicSuffix('svadba.net.ru', 'net.ru');
         $this->checkPublicSuffix('us.example.com', 'com');
@@ -481,5 +483,19 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         static::assertEquals('com', $extract->parse('a.blogspot.com')->getSuffix());
         static::assertEquals('com', $extract->parse('a.b.blogspot.com')->getSuffix());
         static::assertEquals('blogspot.com', $extract->parse('a.blogspot.com')->getRegistrableDomain());
+    }
+
+    /**
+     * Test for fixQueryPart() method.
+     *
+     * @return void
+     */
+    public function fixQueryPart()
+    {
+        $method = new \ReflectionMethod(Extract::class, 'fixQueryPart');
+        $method->setAccessible(true);
+
+        static::assertEquals('http://example.com/?query', $method->invoke($this->extract), 'http://example.com/?query');
+        static::assertEquals('http://example.com/?query', $method->invoke($this->extract), 'http://example.com?query');
     }
 }
