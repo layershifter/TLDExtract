@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 - 2016-08-03
+
+Fixes:
+* issue #5 with handling query part of URL
+
 ## 1.1.0 - 2016-06-29
 
 New features:
