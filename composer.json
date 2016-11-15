@@ -15,17 +15,15 @@
     }
   ],
   "require": {
-    "php": ">=5.5",
+    "php": "^5.5.0 || ^7.0",
     "ext-intl": "*",
     "layershifter/tld-database": "^1.0",
     "layershifter/tld-support": "^1.1"
   },
   "require-dev": {
-    "codeclimate/php-test-reporter": "dev-master",
     "phpmd/phpmd": "@stable",
-    "phpunit/phpunit": "4.8.*",
-    "scrutinizer/ocular": "~1.1",
-    "squizlabs/php_codesniffer": "2.*"
+    "phpunit/phpunit": "^4.8 || ^5.0",
+    "squizlabs/php_codesniffer": "~2.0"
   },
   "autoload": {
     "files": [

@@ -3,6 +3,7 @@
 
 # Ignore all test and documentation with "export-ignore".
 /tests            export-ignore
+/travis           export-ignore
 /.codeclimate.yml export-ignore
 /.editorconfig    export-ignore
 /.gitattributes   export-ignore
