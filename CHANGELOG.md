@@ -3,7 +3,7 @@
 ## dev
 
 New features:
-* issue #7 use symfony intl polyfill
+* issue #7 use polyfill for intl functions
 
 ## 1.1.1 - 2016-08-03
 

@@ -16,9 +16,9 @@
   ],
   "require": {
     "php": ">=5.5",
-    "symfony/polyfill-intl-icu": "^1.0",
     "layershifter/tld-database": "^1.0",
-    "layershifter/tld-support": "^1.1"
+    "layershifter/tld-support": "^1.1",
+    "true/punycode": "^2.1.1"
   },
   "require-dev": {
     "codeclimate/php-test-reporter": "dev-master",
@@ -29,7 +29,8 @@
   },
   "autoload": {
     "files": [
-      "src/static.php"
+      "src/static.php",
+      "src/polyfill.php"
     ],
     "psr-4": {
       "LayerShifter\\TLDExtract\\": "src/"
