@@ -52,6 +52,10 @@ class Extract
      */
     private $resultClassName;
     /**
+     * @var IDN Object of TLDExtract\IDN class.
+     */
+    private $idn;
+    /**
      * @var Store Object of TLDDatabase\Store class.
      */
     private $suffixStore;
@@ -67,6 +71,7 @@ class Extract
      */
     public function __construct($databaseFile = null, $resultClassName = null, $extractionMode = null)
     {
+        $this->idn = new IDN();
         $this->suffixStore = new Store($databaseFile);
         $this->resultClassName = Result::class;
 
@@ -248,7 +253,7 @@ class Extract
         $isPunycoded = Str::strpos($hostname, 'xn--') !== false;
 
         if ($isPunycoded) {
-            $hostname = idn_to_utf8($hostname);
+            $hostname = $this->idn->toUTF8($hostname);
         }
 
         $suffix = $this->parseSuffix($hostname);
@@ -263,7 +268,7 @@ class Extract
 
         // If domain is punycoded, suffix will be converted to punycode.
 
-        return $isPunycoded ? idn_to_ascii($suffix) : $suffix;
+        return $isPunycoded ? $this->idn->toASCII($hostname) : $suffix;
     }
 
     /**
