@@ -29,8 +29,7 @@
   },
   "autoload": {
     "files": [
-      "src/static.php",
-      "src/polyfill.php"
+      "src/static.php"
     ],
     "psr-4": {
       "LayerShifter\\TLDExtract\\": "src/"
