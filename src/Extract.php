@@ -268,7 +268,7 @@ class Extract
 
         // If domain is punycoded, suffix will be converted to punycode.
 
-        return $isPunycoded ? $this->idn->toASCII($hostname) : $suffix;
+        return $isPunycoded ? $this->idn->toASCII($suffix) : $suffix;
     }
 
     /**
