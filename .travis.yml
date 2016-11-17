@@ -1,34 +1,41 @@
-language: php
+branches:
+  only:
+    - master
 
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
+language: bash
 
-# This triggers builds to run on the new TravisCI infrastructure.
-# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
-sudo: false
-
-## Cache composer
 cache:
   directories:
     - $HOME/.composer/cache
 
-before_script:
-  - mkdir -p build/logs
-  - travis_retry composer self-update
-  - travis_retry composer update --no-interaction --prefer-dist
+services:
+  - docker
+
+sudo: required
 
 env:
-  global:
-    - CODECLIMATE_REPO_TOKEN=7396381ced84304988d8d21526e4b626ac3ab455415d4f0a1154da9609d8cdbb
+  matrix:
+    - ENGINE=php VERSION=5.5 INTL=0
+    - ENGINE=php VERSION=5.5 INTL=1
+    - ENGINE=php VERSION=5.6 INTL=0
+    - ENGINE=php VERSION=5.6 INTL=1
+    - ENGINE=php VERSION=7.0 INTL=0
+    - ENGINE=php VERSION=7.0 INTL=1
+    - ENGINE=php VERSION=7.1 INTL=0
+    - ENGINE=php VERSION=7.1 INTL=1
+    - ENGINE=hhvm INTL=0
+
+before_script:
+  - bash travis/helper.sh install
+  - bash travis/helper.sh info
+  - bash travis/helper.sh run mkdir -p build/logs
+  - bash travis/helper.sh run mkdir -p build/cov
+  - bash travis/helper.sh run composer self-update
+  - bash travis/helper.sh run composer update --no-interaction --prefer-dist
 
 script:
-  - vendor/bin/phpcs --standard=psr2 src/
-  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
-  - vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
+  - bash travis/helper.sh phpunit
+  - if [[ $ENGINE == 'php' && $VERSION == '7.0' ]]; then bash travis/helper.sh lint; fi
 
-after_script:
-  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != '7.0' ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi
-  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != '7.0' ]]; then php vendor/bin/test-reporter --coverage-report ./build/logs/clover.xml; fi
+after_success:
+  - if [[ $ENGINE == 'php' && $VERSION == '7.0' ]]; then bash travis/helper.sh coverage; fi
