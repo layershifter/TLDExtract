@@ -1,9 +1,9 @@
 # Changelog
 
-## dev
+## 1.2.0 - 2016-11-17
 
 New features:
-* issue #7 use polyfill for intl functions
+* remove dependency on `intl` extension (#8).
 
 ## 1.1.1 - 2016-08-03
 
