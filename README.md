@@ -7,7 +7,6 @@
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-coverage]][link-coverage]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![PHP 7 ready][ico-php7ready]][link-travis]
 
 ---
 
@@ -55,6 +54,7 @@ The following versions of PHP are supported.
 * PHP 5.5
 * PHP 5.6
 * PHP 7.0
+* PHP 7.1
 * HHVM
 
 ## Install
@@ -146,11 +146,10 @@ This library is released under the Apache 2.0 license. Please see [License File]
 [ico-version]: https://img.shields.io/packagist/v/layershifter/tld-extract.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-Apache2-brightgreen.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/layershifter/TLDExtract/master.svg?style=flat-square
-[ico-coverage]: https://codeclimate.com/github/layershifter/TLDExtract/badges/coverage.svg
+[ico-coverage]:https://codecov.io/gh/layershifter/TLDExtract/branch/master/graph/badge.svg
 [ico-downloads]: https://img.shields.io/packagist/dt/layershifter/tld-extract.svg?style=flat-square
-[ico-php7ready]: http://php7ready.timesplinter.ch/layershifter/TLDExtract/master/badge.svg
 
 [link-packagist]: https://packagist.org/packages/layershifter/tld-extract
 [link-travis]: https://travis-ci.org/layershifter/TLDExtract
-[link-coverage]: https://codeclimate.com/github/layershifter/TLDExtract/coverage
+[link-coverage]: https://codecov.io/gh/layershifter/TLDExtract
 [link-downloads]: https://packagist.org/packages/layershifter/tld-extract
