@@ -170,7 +170,7 @@ class Extract
 
         // Removes path and query part of URL i.e. "github.com/layershifter" to "github.com".
 
-        $url = $this->fixQueryPart($url);
+        $url = $this->fixUriParts($url);
         $hostname = Arr::first(explode('/', $url, 2));
 
         // Removes username from URL i.e. user@github.com to github.com.
@@ -334,7 +334,9 @@ class Extract
     }
 
     /**
-     * Fixes URL from "github.com?layershifter" to "github.com/?layershifter".
+     * Fixes URL:
+     * - from "github.com?layershifter" to "github.com/?layershifter".
+     * - from "github.com#layershifter" to "github.com/#layershifter".
      *
      * @see https://github.com/layershifter/TLDExtract/issues/5
      *
@@ -342,9 +344,9 @@ class Extract
      *
      * @return string
      */
-    private function fixQueryPart($url)
+    private function fixUriParts($url)
     {
-        $position = Str::strpos($url, '?');
+        $position = Str::strpos($url, '?') ?: Str::strpos($url, '#');
 
         if ($position === false) {
             return $url;
