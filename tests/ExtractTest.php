@@ -353,33 +353,14 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         $this->checkPublicSuffix('http://example.com/?foo=bar', 'com');
         $this->checkPublicSuffix('http://example.com?foo=bar', 'com');
         $this->checkPublicSuffix('bcc.bccbcc', 'bccbcc');
-        $this->checkPublicSuffix('svadba.net.ru', 'net.ru');
+        $this->checkPublicSuffix('svadba.ru', 'ru');
         $this->checkPublicSuffix('us.example.com', 'com');
         $this->checkPublicSuffix('us.example.org', 'org');
 
-        // Test different schemas.
+        // Test number sign.
 
-        $this->checkPublicDomain('//www.bbc.co.uk/news/business', 'bbc.co.uk');
-        $this->checkPublicSuffix('//www.bbc.co.uk/news/business', 'co.uk');
-        $this->checkPublicDomain('ftp://www.bbc.co.uk/news/business', 'bbc.co.uk');
-        $this->checkPublicSuffix('ftp://www.bbc.co.uk/news/business', 'co.uk');
-        $this->checkPublicSuffix('test.schema://example.com', 'com');
-
-        // Test IDN.
-
-        $this->checkPublicDomain('http://Яндекс.РФ', 'яндекс.рф');
-        $this->checkPublicSuffix('http://Яндекс.РФ', 'рф');
-
-        // Test non-existent suffixes.
-
-        $this->checkPublicSuffix('http://localhost', null);
-        $this->checkPublicSuffix('http://www.example.dev', 'dev');
-        $this->checkPublicSuffix('http://example.faketld', 'faketld');
-
-        // Test IP.
-
-        $this->checkPublicSuffix('http://[::1]/', null);
-        $this->checkPublicSuffix('http://192.168.1.1/', null);
+        $this->checkPublicSuffix('#test.com', null);
+        $this->checkPublicSuffix('test.com#test_test', 'com');
     }
 
     /**
@@ -497,5 +478,10 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals('http://example.com/?query', $method->invoke($this->extract), 'http://example.com/?query');
         static::assertEquals('http://example.com/?query', $method->invoke($this->extract), 'http://example.com?query');
+
+        static::assertEquals('http://example.com/#hash', $method->invoke($this->extract), 'http://example.com/#hash');
+        static::assertEquals('http://example.com/#hash', $method->invoke($this->extract), 'http://example.com#hash');
+
+        static::assertEquals('http://example.com/?query#hash', $method->invoke($this->extract), 'http://example.com?query#hash');
     }
 }
