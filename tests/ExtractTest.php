@@ -353,7 +353,7 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         $this->checkPublicSuffix('http://example.com/?foo=bar', 'com');
         $this->checkPublicSuffix('http://example.com?foo=bar', 'com');
         $this->checkPublicSuffix('bcc.bccbcc', 'bccbcc');
-        $this->checkPublicSuffix('svadba.net.ru', 'net.ru');
+        $this->checkPublicSuffix('svadba.ru', 'ru');
         $this->checkPublicSuffix('us.example.com', 'com');
         $this->checkPublicSuffix('us.example.org', 'org');
 
