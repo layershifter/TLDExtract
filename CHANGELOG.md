@@ -1,9 +1,14 @@
 # Changelog
 
+## 1.2.1 - 2017-04-17
+
+Fixes:
+* incorrect parsing domains with number sign (#16)
+
 ## 1.2.0 - 2016-11-17
 
 New features:
-* remove dependency on `intl` extension (#8).
+* remove dependency on `intl` extension (#8)
 
 ## 1.1.1 - 2016-08-03
 
