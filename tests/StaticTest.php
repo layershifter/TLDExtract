@@ -30,7 +30,7 @@ class StaticTest extends \PHPUnit_Framework_TestCase
         static::assertEquals('www.domain.com', $result->getFullHost());
         static::assertEquals('domain.com', $result->getRegistrableDomain());
 
-        $result = tld_extract('a.b.blogspot.com', Extract::MODE_ALLOW_ICCAN);
+        $result = tld_extract('a.b.blogspot.com', Extract::MODE_ALLOW_ICANN);
 
         static::assertEquals('a.b.blogspot.com', $result->getFullHost());
         static::assertEquals('blogspot.com', $result->getRegistrableDomain());

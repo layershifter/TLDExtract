@@ -17,7 +17,7 @@
 ```php
 $result = tld_extract('http://forums.news.cnn.com/');
 var_dump($result);
-    
+
 object(LayerShifter\TLDExtract\Result)#34 (3) {
   ["subdomain":"LayerShifter\TLDExtract\Result":private]=>
   string(11) "forums.news"
@@ -108,7 +108,7 @@ new LayerShifter\TLDExtract\Extract(null, CustomResult::class);
 ## Parsing modes
 
 Package has three modes of parsing:
-* allow ICCAN suffixes (domains are those delegated by ICANN or part of the IANA root zone database);
+* allow ICANN suffixes (domains are those delegated by ICANN or part of the IANA root zone database);
 * allow private domains (domains are amendments submitted to Public Suffix List by the domain holder, as an expression of how they operate their domain security policy);
 * allow custom (domains that are not in list, but can be usable, for example: example, mycompany, etc).
 
@@ -116,10 +116,10 @@ For keeping compatibility with Public Suffix List ideas package runs in all thes
 ```php
 use LayerShifter\TLDExtract\Extract;
 
-new Extract(null, null, Extract::MODE_ALLOW_ICCAN);
+new Extract(null, null, Extract::MODE_ALLOW_ICANN);
 new Extract(null, null, Extract::MODE_ALLOW_PRIVATE);
 new Extract(null, null, Extract::MODE_ALLOW_NOT_EXISTING_SUFFIXES);
-new Extract(null, null, Extract::MODE_ALLOW_ICCAN | Extract::MODE_ALLOW_PRIVATE);
+new Extract(null, null, Extract::MODE_ALLOW_ICANN | Extract::MODE_ALLOW_PRIVATE);
 ```
 
 ## Change log
