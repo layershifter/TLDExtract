@@ -30,7 +30,6 @@ class Extract
     const MODE_ALLOW_ICANN = 2;
 
     /**
-     * @const int If this option provided, extract will consider ICANN suffixes.
      * @deprecated This constant is a typo, please use self::MODE_ALLOW_ICANN
      */
     const MODE_ALLOW_ICCAN = self::MODE_ALLOW_ICANN;
