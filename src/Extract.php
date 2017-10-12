@@ -25,9 +25,16 @@ class Extract
 {
 
     /**
-     * @const int If this option provided, extract will consider ICCAN suffixes.
+     * @const int If this option provided, extract will consider ICANN suffixes.
      */
-    const MODE_ALLOW_ICCAN = 2;
+    const MODE_ALLOW_ICANN = 2;
+
+    /**
+     * @const int If this option provided, extract will consider ICANN suffixes.
+     * @deprecated This constant is a typo, please use self::MODE_ALLOW_ICANN
+     */
+    const MODE_ALLOW_ICCAN = self::MODE_ALLOW_ICANN;
+
     /**
      * @const int If this option provided, extract will consider private suffixes.
      */
@@ -102,7 +109,7 @@ class Extract
     public function setExtractionMode($extractionMode = null)
     {
         if (null === $extractionMode) {
-            $this->extractionMode = static::MODE_ALLOW_ICCAN
+            $this->extractionMode = static::MODE_ALLOW_ICANN
                 | static::MODE_ALLOW_PRIVATE
                 | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES;
 
@@ -114,12 +121,12 @@ class Extract
         }
 
         if (!in_array($extractionMode, [
-            static::MODE_ALLOW_ICCAN,
+            static::MODE_ALLOW_ICANN,
             static::MODE_ALLOW_PRIVATE,
             static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
-            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_PRIVATE,
-            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
-            static::MODE_ALLOW_ICCAN | static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_ICANN | static::MODE_ALLOW_PRIVATE,
+            static::MODE_ALLOW_ICANN | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
+            static::MODE_ALLOW_ICANN | static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES,
             static::MODE_ALLOW_PRIVATE | static::MODE_ALLOW_NOT_EXISTING_SUFFIXES
         ], true)
         ) {
@@ -326,7 +333,7 @@ class Extract
 
         $type = $this->suffixStore->getType($entry);
 
-        if ($this->extractionMode & static::MODE_ALLOW_ICCAN && $type === Store::TYPE_ICCAN) {
+        if ($this->extractionMode & static::MODE_ALLOW_ICANN && $type === Store::TYPE_ICANN) {
             return true;
         }
 
