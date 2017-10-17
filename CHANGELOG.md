@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 - 2017-10-17
+
+Fixes:
+* fix typo in class constant (#18)
+
 ## 1.2.1 - 2017-04-17
 
 Fixes:
