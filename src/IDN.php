@@ -38,6 +38,10 @@ class IDN
             return $this->transformer->encode($domain);
         }
 
+        if (defined('INTL_IDNA_VARIANT_UTS46')) {
+            return idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
+        }
+
         return idn_to_ascii($domain);
     }
 
@@ -52,6 +56,10 @@ class IDN
     {
         if ($this->transformer) {
             return $this->transformer->decode($domain);
+        }
+
+        if (defined('INTL_IDNA_VARIANT_UTS46')) {
+            return idn_to_utf8($domain, 0, INTL_IDNA_VARIANT_UTS46);
         }
 
         return idn_to_utf8($domain);
