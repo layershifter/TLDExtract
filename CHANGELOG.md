@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.3 - 2017-11-18
+
+Improvements:
+* PHP 7.2 support
+
+Fixes:
+* use INTL_IDNA_VARIANT_UTS46 for idn_* functions (#20)
+
 ## 1.2.2 - 2017-10-17
 
 Fixes:
