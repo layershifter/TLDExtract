@@ -15,6 +15,7 @@ use LayerShifter\TLDExtract\Exceptions\RuntimeException;
 use LayerShifter\TLDSupport\Helpers\Arr;
 use LayerShifter\TLDSupport\Helpers\IP;
 use LayerShifter\TLDSupport\Helpers\Str;
+use TrueBV\Exception\OutOfBoundsException;
 
 /**
  * Extract class accurately extracts subdomain, domain and TLD components from URLs.
@@ -48,6 +49,13 @@ class Extract
      * @see   https://tools.ietf.org/html/rfc3986#section-3.1
      */
     const SCHEMA_PATTERN = '#^([a-zA-Z][a-zA-Z0-9+\-.]*:)?//#';
+    /**
+     * @const string The specification for this regex is based upon the extracts from RFC 1034 and RFC 2181 below.
+     *
+     * @see   https://tools.ietf.org/html/rfc1034
+     * @see   https://tools.ietf.org/html/rfc2181
+     */
+    const HOSTNAME_PATTERN = '#^((?!-)[a-z0-9-]{0,62}[a-z0-9]\.)+[a-z]{2,63}|[xn\-\-a-z0-9]]{6,63}$#';
 
     /**
      * @var int Value of extraction options.
@@ -260,6 +268,33 @@ class Extract
 
         if ($isPunycoded) {
             $hostname = $this->idn->toUTF8($hostname);
+        }
+
+        // URI producers should use names that conform to the DNS syntax, even when use of DNS is not immediately
+        // apparent, and should limit these names to no more than 255 characters in length.
+        //
+        // @see https://tools.ietf.org/html/rfc3986
+        // @see http://blogs.msdn.com/b/oldnewthing/archive/2012/04/12/10292868.aspx
+
+        if (Str::length($hostname) > 253) {
+            return null;
+        }
+
+        // The DNS itself places only one restriction on the particular labels that can be used to identify resource
+        // records. That one restriction relates to the length of the label and the full name. The length of any one
+        // label is limited to between 1 and 63 octets. A full domain name is limited to 255 octets (including the
+        // separators).
+        //
+        // @see http://tools.ietf.org/html/rfc2181
+
+        try {
+            $asciiHostname = $this->idn->toASCII($hostname);
+        } catch (OutOfBoundsException $e) {
+            return null;
+        }
+
+        if (0 === preg_match(self::HOSTNAME_PATTERN, $asciiHostname)) {
+            return null;
         }
 
         $suffix = $this->parseSuffix($hostname);
