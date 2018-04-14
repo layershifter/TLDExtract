@@ -209,9 +209,41 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         $this->checkPublicDomain('example.COM', 'example.com');
         $this->checkPublicDomain('WwW.example.COM', 'example.com');
 
+        // Long domains.
+
+        $this->checkPublicDomain(
+            sprintf(
+                '%s.%s.%s.%s.com',
+                str_repeat('a', 63),
+                str_repeat('a', 63),
+                str_repeat('a', 63),
+                str_repeat('a', 57)
+            ),  // 253 characters
+            str_repeat('a', 57) . '.com'
+        );
+        $this->checkPublicDomain(
+            sprintf(
+                'http://%s.%s.%s.%s.com',
+                str_repeat('a', 63),
+                str_repeat('a', 63),
+                str_repeat('a', 63),
+                str_repeat('a', 57)
+            ),  // 253 characters without schema
+            str_repeat('a', 57) . '.com'
+        );
+
+        // Long and too short parts of domains domains.
+
+        $this->checkPublicDomain('test..com', null);
+        $this->checkPublicDomain(
+            str_repeat('a', 64) . '.a.com',
+            null
+        );
+
         // Leading dot.
 
         $this->checkPublicDomain('.com', null);
+        $this->checkPublicDomain('..com', null);
         $this->checkPublicDomain('.example', null);
         $this->checkPublicDomain('.example.com', null);
         $this->checkPublicDomain('.example.example', null);
