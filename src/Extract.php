@@ -55,7 +55,7 @@ class Extract
      * @see   https://tools.ietf.org/html/rfc1034
      * @see   https://tools.ietf.org/html/rfc2181
      */
-    const HOSTNAME_PATTERN = '#^((?!-)[a-z0-9-]{0,62}[a-z0-9]\.)+[a-z]{2,63}|[xn\-\-a-z0-9]]{6,63}$#';
+    const HOSTNAME_PATTERN = '#^((?!-)[a-z0-9_-]{0,62}[a-z0-9]\.)+[a-z]{2,63}|[xn\-\-a-z0-9]]{6,63}$#';
 
     /**
      * @var int Value of extraction options.
