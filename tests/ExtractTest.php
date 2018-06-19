@@ -516,4 +516,20 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals('http://example.com/?query#hash', $method->invoke($this->extract), 'http://example.com?query#hash');
     }
+
+    /**
+     * Test for subdomain with underscore.
+     *
+     * @return void
+     */
+    public function testParseUnderscore()
+    {
+        static::assertEquals('com', $this->extract->parse('dkim._domainkey.example.com')->getSuffix());
+        static::assertEquals('example', $this->extract->parse('dkim._domainkey.example.com')->getHostname());
+        static::assertEquals('dkim._domainkey', $this->extract->parse('dkim._domainkey.example.com')->getSubdomain());
+
+        static::assertEquals('com', $this->extract->parse('_spf.example.com')->getSuffix());
+        static::assertEquals('example', $this->extract->parse('_spf.example.com')->getHostname());
+        static::assertEquals('_spf', $this->extract->parse('_spf.example.com')->getSubdomain());
+    }
 }
