@@ -527,9 +527,19 @@ class ExtractTest extends \PHPUnit_Framework_TestCase
         static::assertEquals('com', $this->extract->parse('dkim._domainkey.example.com')->getSuffix());
         static::assertEquals('example', $this->extract->parse('dkim._domainkey.example.com')->getHostname());
         static::assertEquals('dkim._domainkey', $this->extract->parse('dkim._domainkey.example.com')->getSubdomain());
+        static::assertEquals(array('dkim','_domainkey'), $this->extract->parse('dkim._domainkey.example.com')->getSubdomains());
 
         static::assertEquals('com', $this->extract->parse('_spf.example.com')->getSuffix());
         static::assertEquals('example', $this->extract->parse('_spf.example.com')->getHostname());
         static::assertEquals('_spf', $this->extract->parse('_spf.example.com')->getSubdomain());
+
+        static::assertEquals('com', $this->extract->parse('foo_.example.com')->getSuffix());
+        static::assertEquals('example', $this->extract->parse('foo_.example.com')->getHostname());
+        static::assertEquals('foo_', $this->extract->parse('foo_.example.com')->getSubdomain());
+
+        static::assertEquals('com', $this->extract->parse('bar.foo_.example.com')->getSuffix());
+        static::assertEquals('example', $this->extract->parse('bar.foo_.example.com')->getHostname());
+        static::assertEquals('bar.foo_', $this->extract->parse('bar.foo_.example.com')->getSubdomain());
+        static::assertEquals(array('bar', 'foo_'), $this->extract->parse('bar.foo_.example.com')->getSubdomains());
     }
 }
