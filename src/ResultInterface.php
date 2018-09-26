@@ -35,7 +35,7 @@ interface ResultInterface
     /**
      * Return subdomains if they exist, example subdomain is "www.news", method will return array ['www', 'bbc'].
      *
-     * @return null|array
+     * @return array
      */
     public function getSubdomains();
 

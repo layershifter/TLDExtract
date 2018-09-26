@@ -70,6 +70,9 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test domain entry.
      *
      * @return void
+     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
+     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
+     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testDomain()
     {
@@ -78,7 +81,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals('github.com', $result->getFullHost());
         static::assertEquals(null, $result->getSubdomain());
-        static::assertEquals(null, $result->getSubdomains());
+        static::assertEquals(array(), $result->getSubdomains());
         static::assertEquals('github.com', $result->getRegistrableDomain());
         static::assertTrue($result->isValidDomain());
         static::assertFalse($result->isIp());
@@ -88,6 +91,9 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test subdomain entry.
      *
      * @return void
+     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
+     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
+     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testSubDomain()
     {
@@ -108,6 +114,9 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test subdomain entries.
      *
      * @return void
+     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
+     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
+     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testSubdomains()
     {
@@ -128,6 +137,9 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test IP entry.
      *
      * @return void
+     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
+     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
+     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testIp()
     {
@@ -136,7 +148,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals('192.168.0.1', $result->getFullHost());
         static::assertEquals(null, $result->getSubdomain());
-        static::assertEquals(null, $result->getSubdomains());
+        static::assertEquals(array(), $result->getSubdomains());
         static::assertNull($result->getRegistrableDomain());
         static::assertFalse($result->isValidDomain());
         static::assertTrue($result->isIp());
