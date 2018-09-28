@@ -70,9 +70,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test domain entry.
      *
      * @return void
-     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
-     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
-     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testDomain()
     {
@@ -91,9 +88,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test subdomain entry.
      *
      * @return void
-     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
-     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
-     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testSubDomain()
     {
@@ -114,9 +108,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test subdomain entries.
      *
      * @return void
-     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
-     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
-     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testSubdomains()
     {
@@ -137,9 +128,6 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      * Test IP entry.
      *
      * @return void
-     * @throws \LayerShifter\TLDDatabase\Exceptions\IOException
-     * @throws \LayerShifter\TLDDatabase\Exceptions\StoreException
-     * @throws \LayerShifter\TLDExtract\Exceptions\RuntimeException
      */
     public function testIp()
     {
