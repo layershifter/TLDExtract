@@ -25,6 +25,8 @@ env:
     - ENGINE=php VERSION=7.1 INTL=1
     - ENGINE=php VERSION=7.2 INTL=0
     - ENGINE=php VERSION=7.2 INTL=1
+    - ENGINE=php VERSION=7.3 INTL=0
+    - ENGINE=php VERSION=7.3 INTL=1
     - ENGINE=hhvm INTL=0
 
 before_script:
