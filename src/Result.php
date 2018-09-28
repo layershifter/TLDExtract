@@ -72,11 +72,11 @@ class Result implements \ArrayAccess, ResultInterface
     /**
      * Return subdomains if they exist, example subdomain is "www.news", method will return array ['www', 'bbc'].
      *
-     * @return null|array
+     * @return array
      */
     public function getSubdomains()
     {
-        return null === $this->subdomain ? null : explode('.', $this->subdomain);
+        return null === $this->subdomain ? array() : explode('.', $this->subdomain);
     }
 
     /**

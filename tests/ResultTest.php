@@ -78,7 +78,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals('github.com', $result->getFullHost());
         static::assertEquals(null, $result->getSubdomain());
-        static::assertEquals(null, $result->getSubdomains());
+        static::assertEquals(array(), $result->getSubdomains());
         static::assertEquals('github.com', $result->getRegistrableDomain());
         static::assertTrue($result->isValidDomain());
         static::assertFalse($result->isIp());
@@ -136,7 +136,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals('192.168.0.1', $result->getFullHost());
         static::assertEquals(null, $result->getSubdomain());
-        static::assertEquals(null, $result->getSubdomains());
+        static::assertEquals(array(), $result->getSubdomains());
         static::assertNull($result->getRegistrableDomain());
         static::assertFalse($result->isValidDomain());
         static::assertTrue($result->isIp());
