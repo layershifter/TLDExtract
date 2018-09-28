@@ -1,4 +1,4 @@
-FROM php:7.2
+FROM php:7.3-rc
 
 RUN apt-get update && apt-get install -y git zlib1g-dev libicu-dev g++
 RUN docker-php-ext-install intl
