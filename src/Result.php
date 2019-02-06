@@ -70,7 +70,7 @@ class Result implements \ArrayAccess, ResultInterface
     }
 
     /**
-     * Return subdomains if they exist, example subdomain is "www.news", method will return array ['www', 'bbc'].
+     * Return subdomains if they exist, example subdomain is "www.news", method will return array ['www', 'news'].
      *
      * @return array
      */
