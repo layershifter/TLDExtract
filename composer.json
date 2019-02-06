@@ -18,7 +18,7 @@
     "php": "^5.5.0 || ^7.0",
     "layershifter/tld-database": "^1.0",
     "layershifter/tld-support": "^1.1",
-    "true/punycode": "^2.1.1"
+    "symfony/polyfill-intl-idn": "^1.10"
   },
   "require-dev": {
     "phpmd/phpmd": "@stable",

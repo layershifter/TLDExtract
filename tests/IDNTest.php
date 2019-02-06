@@ -3,7 +3,6 @@
 namespace LayerShifter\TLDExtract\Tests;
 
 use LayerShifter\TLDExtract\IDN;
-use TrueBV\Punycode;
 
 /**
  * Tests for IDN class.
@@ -24,22 +23,6 @@ class IDNTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->idn = new IDN();
-    }
-
-    /**
-     * Tests constructor(), ensures that transformer isn't loaded when `intl` extension present.
-     *
-     * @void
-     */
-    public function testConstructor()
-    {
-        if (function_exists('\idn_to_utf8')) {
-            $this->assertAttributeInternalType('null', 'transformer', $this->idn);
-
-            return;
-        }
-
-        $this->assertAttributeInstanceOf(Punycode::class, 'transformer', $this->idn);
     }
 
     /**
