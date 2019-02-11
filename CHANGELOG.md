@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.4 - 2019-02-11
+
+Docs:
+* Update supported php versions (#40)
+* Fix getSubdomains function description example (#41)
+
+Improvements:
+* PHP 7.3 support
+* Use `symfony/polyfill-intl-idn` instead of `true/punycode` (#39)
+
 ## 1.2.3 - 2017-11-18
 
 Improvements:
